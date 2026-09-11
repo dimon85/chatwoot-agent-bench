@@ -1,0 +1,700 @@
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {in_progress: 0, available: 1}
+ (called from <class:Document> at /Users/dmytro/chatwoot/enterprise/app/models/captain/document.rb:53)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :sender_name_type, {friendly: 0, professional: 1}
+ (called from <class:Inbox> at /Users/dmytro/chatwoot/app/models/inbox.rb:81)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :role, {agent: 0, administrator: 1}
+ (called from <class:AccountUser> at /Users/dmytro/chatwoot/app/models/account_user.rb:34)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :availability, {online: 0, offline: 1, busy: 2}
+ (called from <class:AccountUser> at /Users/dmytro/chatwoot/app/models/account_user.rb:35)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :sla_status, {active: 0, hit: 1, missed: 2, active_with_misses: 3}
+ (called from <class:AppliedSla> at /Users/dmytro/chatwoot/enterprise/app/models/applied_sla.rb:31)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :conversation_priority, {earliest_created: 0, longest_waiting: 1}
+ (called from <class:AssignmentPolicy> at /Users/dmytro/chatwoot/app/models/assignment_policy.rb:36)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :assignment_order, {round_robin: 0, balanced: 1}
+ (called from block in <module:AssignmentPolicy> at /Users/dmytro/chatwoot/enterprise/app/models/enterprise/concerns/assignment_policy.rb:5)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {queued: 0, skipped: 1, sent: 2, delivered: 3, read: 4, failed: 5}
+ (called from <class:CampaignRecipient> at /Users/dmytro/chatwoot/enterprise/app/models/campaign_recipient.rb:7)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {approved: 1}
+ (called from <class:AssistantResponse> at /Users/dmytro/chatwoot/enterprise/app/models/captain/assistant_response.rb:48)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :medium, {sms: 0, whatsapp: 1}
+ (called from <class:TwilioSms> at /Users/dmytro/chatwoot/app/models/channel/twilio_sms.rb:52)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :contact_type, {visitor: 0, lead: 1, customer: 2}
+ (called from <class:Contact> at /Users/dmytro/chatwoot/app/models/contact.rb:71)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {open: 0, resolved: 1, pending: 2, snoozed: 3}
+ (called from <class:Conversation> at /Users/dmytro/chatwoot/app/models/conversation.rb:86)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :priority, {low: 0, medium: 1, high: 2, urgent: 3}
+ (called from <class:Conversation> at /Users/dmytro/chatwoot/app/models/conversation.rb:87)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :message_type, {user: 0, assistant: 1, assistant_thinking: 2}
+ (called from <class:CopilotMessage> at /Users/dmytro/chatwoot/enterprise/app/models/copilot_message.rb:22)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :attribute_model, {conversation_attribute: 0, contact_attribute: 1, company_attribute: 2}
+ (called from <class:CustomAttributeDefinition> at /Users/dmytro/chatwoot/app/models/custom_attribute_definition.rb:45)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :attribute_display_type, {text: 0, number: 1, currency: 2, percent: 3, link: 4, date: 5, list: 6, checkbox: 7}
+ (called from <class:CustomAttributeDefinition> at /Users/dmytro/chatwoot/app/models/custom_attribute_definition.rb:46)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :visibility, {personal: 0, global: 1}
+ (called from <class:Macro> at /Users/dmytro/chatwoot/app/models/macro.rb:29)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :message_type, {incoming: 0, outgoing: 1, activity: 2, template: 3}
+ (called from <class:Message> at /Users/dmytro/chatwoot/app/models/message.rb:88)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :content_type, {text: 0, input_text: 1, input_textarea: 2, input_email: 3, input_select: 4, cards: 5, form: 6, article: 7, incoming_email: 8, input_csat: 9, integrations: 10, sticker: 11, voice_call: 12}
+ (called from <class:Message> at /Users/dmytro/chatwoot/app/models/message.rb:89)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {sent: 0, delivered: 1, read: 2, failed: 3}
+ (called from <class:Message> at /Users/dmytro/chatwoot/app/models/message.rb:104)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :event_type, {frt: 0, nrt: 1, rt: 2}
+ (called from <class:SlaEvent> at /Users/dmytro/chatwoot/enterprise/app/models/sla_event.rb:31)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :webhook_type, {account_type: 0, inbox_type: 1}
+ (called from <class:Webhook> at /Users/dmytro/chatwoot/app/models/webhook.rb:30)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :notification_type, {conversation_creation: 1, conversation_assignment: 2, assigned_conversation_new_message: 3, conversation_mention: 4, participating_conversation_new_message: 5, sla_missed_first_response: 6, sla_missed_next_response: 7, sla_missed_resolution: 8}
+ (called from <class:Notification> at /Users/dmytro/chatwoot/app/models/notification.rb:49)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {active: 0, inactive: 1}
+ (called from <class:AgentBotInbox> at /Users/dmytro/chatwoot/app/models/agent_bot_inbox.rb:22)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :bot_type, {webhook: 0}
+ (called from <class:AgentBot> at /Users/dmytro/chatwoot/app/models/agent_bot.rb:42)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {draft: 0, published: 1, archived: 2}
+ (called from <class:Article> at /Users/dmytro/chatwoot/app/models/article.rb:73)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :file_type, {image: 0, audio: 1, video: 2, file: 3, location: 4, fallback: 5, share: 6, story_mention: 7, contact: 8, ig_reel: 9, ig_post: 10, ig_story: 11, embed: 12}
+ (called from <class:Attachment> at /Users/dmytro/chatwoot/app/models/attachment.rb:47)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {pending: 0, processing: 1, executed: 2, skipped: 3, executing: 4}
+ (called from <class:AutomationRulePendingExecution> at /Users/dmytro/chatwoot/app/models/automation_rule_pending_execution.rb:42)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :campaign_type, {ongoing: 0, one_off: 1}
+ (called from <class:Campaign> at /Users/dmytro/chatwoot/app/models/campaign.rb:50)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :campaign_status, {active: 0, completed: 1, processing: 2}
+ (called from <class:Campaign> at /Users/dmytro/chatwoot/app/models/campaign.rb:52)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :reply_time, {in_a_few_minutes: 0, in_a_few_hours: 1, in_a_day: 2}
+ (called from <class:WebWidget> at /Users/dmytro/chatwoot/app/models/channel/web_widget.rb:58)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :filter_type, {conversation: 0, contact: 1, report: 2}
+ (called from <class:CustomFilter> at /Users/dmytro/chatwoot/app/models/custom_filter.rb:23)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {pending: 0, processing: 1, completed: 2, failed: 3, completed_with_errors: 6, abandoned: 7}
+ (called from <class:DataImport> at /Users/dmytro/chatwoot/app/models/data_import.rb:57)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {disabled: 0, enabled: 1}
+ (called from <class:Hook> at /Users/dmytro/chatwoot/app/models/integrations/hook.rb:43)
+DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :hook_type, {account: 0, inbox: 1}
+ (called from <class:Hook> at /Users/dmytro/chatwoot/app/models/integrations/hook.rb:49)
+...................................F.................................................................................................................................................................DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :subscription_type, {browser_push: 1, fcm: 2}
+ (called from <class:NotificationSubscription> at /Users/dmytro/chatwoot/app/models/notification_subscription.rb:28)
+............................................................................................................................................................................................/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................................/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.............../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.............................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.............../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.............................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+....................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............................................................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.............................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................................................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................................................................/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......................................................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+...........DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {attached: 0, discarded: 1}
+ (called from <class:FaqObservation> at /Users/dmytro/chatwoot/enterprise/app/models/captain/faq_observation.rb:23)
+...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+....................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.......................********..................................................................................................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.......................................................DEPRECATION WARNING: The option :class_name is deprecated. Administrate should detect it automatically. Please file an issue at https://github.com/thoughtbot/administrate/issues if you think otherwise. (called from block (4 levels) in <main> at /Users/dmytro/chatwoot/spec/controllers/super_admin/account_users_controller_spec.rb:17)
+DEPRECATION WARNING: The option :class_name is deprecated. Administrate should detect it automatically. Please file an issue at https://github.com/thoughtbot/administrate/issues if you think otherwise. (called from block (4 levels) in <main> at /Users/dmytro/chatwoot/spec/controllers/super_admin/account_users_controller_spec.rb:17)
+...DEPRECATION WARNING: The option :class_name is deprecated. Administrate should detect it automatically. Please file an issue at https://github.com/thoughtbot/administrate/issues if you think otherwise. (called from block (3 levels) in _app_views_super_admin_shared__account_user_form_html_erb__3455393670368829960_748016 at /Users/dmytro/chatwoot/app/views/super_admin/shared/_account_user_form.html.erb:44)
+.DEPRECATION WARNING: The option :class_name is deprecated. Administrate should detect it automatically. Please file an issue at https://github.com/thoughtbot/administrate/issues if you think otherwise. (called from block (3 levels) in _app_views_super_admin_shared__account_user_form_html_erb__3455393670368829960_748016 at /Users/dmytro/chatwoot/app/views/super_admin/shared/_account_user_form.html.erb:44)
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.....DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {open: 0, approved: 1, dismissed: 2}
+ (called from <class:FaqSuggestion> at /Users/dmytro/chatwoot/enterprise/app/models/captain/faq_suggestion.rb:28)
+..........................................DEPRECATION WARNING: The option :class_name is deprecated. Administrate should detect it automatically. Please file an issue at https://github.com/thoughtbot/administrate/issues if you think otherwise. (called from block (3 levels) in _app_views_super_admin_shared__account_user_form_html_erb__3455393670368829960_748016 at /Users/dmytro/chatwoot/app/views/super_admin/shared/_account_user_form.html.erb:44)
+......................................................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.................................................................................................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.................................................................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+....../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......................................................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.........................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+....................../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+......................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+............/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+/Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.........../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+....../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+........D, [2026-09-11T10:08:48.556350 #5542] DEBUG -- omniauth: (saml) Setup endpoint detected, running now.
+.D, [2026-09-11T10:08:48.624642 #5542] DEBUG -- omniauth: (saml) Setup endpoint detected, running now.
+.D, [2026-09-11T10:08:48.706391 #5542] DEBUG -- omniauth: (saml) Setup endpoint detected, running now.
+.D, [2026-09-11T10:08:48.762467 #5542] DEBUG -- omniauth: (saml) Setup endpoint detected, running now.
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................F...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................***************...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................*...............................................................................................................................................................................................................................................................................................................................................................................................................................................................********........................................................................................................................./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+./Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+.............../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..........****************...../Users/dmytro/.rbenv/versions/3.4.4/lib/ruby/gems/3.4.0/gems/rspec-rails-7.0.1/lib/rspec/rails/matchers/have_http_status.rb:219: warning: Status code :unprocessable_entity is deprecated and will be removed in a future version of Rack. Please use :unprocessable_content instead.
+..........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................DEPRECATION WARNING: Defining enums with keyword arguments is deprecated and will be removed
+in Rails 8.0. Positional arguments should be used instead:
+
+enum :status, {pending: 0, processing: 1, imported: 2, skipped: 3, failed: 4}
+ (called from <class:DataImportItem> at /Users/dmytro/chatwoot/app/models/data_import_item.rb:34)
+...................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................*****************..........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+
+Pending: (Failures listed here are expected and do not affect your suite's status)
+
+  1) DeviseOverrides::SessionsController POST #create with MFA authentication requires MFA verification after successful password authentication
+     # Skipping since MFA is not configured in this environment
+     # ./spec/controllers/devise_overrides/sessions_controller_spec.rb:34
+
+  2) DeviseOverrides::SessionsController POST #create with MFA authentication does not return authentication tokens before MFA verification
+     # Skipping since MFA is not configured in this environment
+     # ./spec/controllers/devise_overrides/sessions_controller_spec.rb:43
+
+  3) DeviseOverrides::SessionsController POST #create with MFA authentication when verifying MFA authenticates with valid OTP
+     # Skipping since MFA is not configured in this environment
+     # ./spec/controllers/devise_overrides/sessions_controller_spec.rb:66
+
+  4) DeviseOverrides::SessionsController POST #create with MFA authentication when verifying MFA authenticates with valid backup code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/controllers/devise_overrides/sessions_controller_spec.rb:75
+
+  5) DeviseOverrides::SessionsController POST #create with MFA authentication when verifying MFA rejects invalid OTP
+     # Skipping since MFA is not configured in this environment
+     # ./spec/controllers/devise_overrides/sessions_controller_spec.rb:86
+
+  6) DeviseOverrides::SessionsController POST #create with MFA authentication when verifying MFA rejects invalid backup code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/controllers/devise_overrides/sessions_controller_spec.rb:96
+
+  7) DeviseOverrides::SessionsController POST #create with MFA authentication when verifying MFA rejects expired MFA token
+     # Skipping since MFA is not configured in this environment
+     # ./spec/controllers/devise_overrides/sessions_controller_spec.rb:108
+
+  8) DeviseOverrides::SessionsController POST #create with MFA authentication when verifying MFA requires either OTP or backup code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/controllers/devise_overrides/sessions_controller_spec.rb:124
+
+  9) ApplicationRecord encrypts WhatsApp business_management_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/models/application_record_external_credentials_encryption_spec.rb:41
+
+  10) ApplicationRecord behaves like encrypted external credential encrypts smtp_password at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  11) ApplicationRecord behaves like encrypted external credential encrypts imap_password at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  12) ApplicationRecord behaves like encrypted external credential encrypts auth_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  13) ApplicationRecord behaves like encrypted external credential encrypts access_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  14) ApplicationRecord behaves like encrypted external credential encrypts page_access_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  15) ApplicationRecord behaves like encrypted external credential encrypts user_access_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  16) ApplicationRecord behaves like encrypted external credential encrypts access_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  17) ApplicationRecord behaves like encrypted external credential encrypts line_channel_secret at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  18) ApplicationRecord behaves like encrypted external credential encrypts line_channel_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  19) ApplicationRecord behaves like encrypted external credential encrypts bot_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  20) ApplicationRecord behaves like encrypted external credential encrypts twitter_access_token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  21) ApplicationRecord behaves like encrypted external credential encrypts twitter_access_token_secret at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/support/examples/encrypted_external_credential_examples.rb:12
+
+  22) ApplicationRecord when backfilling legacy plaintext reads existing plaintext and encrypts on update
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/models/application_record_external_credentials_encryption_spec.rb:89
+
+  23) ApplicationRecord when looking up telegram legacy records finds plaintext records via fallback lookup
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/models/application_record_external_credentials_encryption_spec.rb:117
+
+  24) DataImport access token encryption encrypts the Intercom access token at rest
+     # encryption keys missing; see run_mfa_spec workflow
+     # ./spec/models/data_import_spec.rb:22
+
+  25) User 2FA/MFA functionality #enable_two_factor! generates OTP secret for 2FA setup
+     # Skipping since MFA is not configured in this environment
+     # ./spec/models/user_spec.rb:122
+
+  26) User 2FA/MFA functionality #disable_two_factor! disables 2FA and clears OTP secret
+     # Skipping since MFA is not configured in this environment
+     # ./spec/models/user_spec.rb:141
+
+  27) User 2FA/MFA functionality #generate_backup_codes! generates 10 backup codes
+     # Skipping since MFA is not configured in this environment
+     # ./spec/models/user_spec.rb:155
+
+  28) User 2FA/MFA functionality #two_factor_provisioning_uri generates a valid provisioning URI for QR code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/models/user_spec.rb:170
+
+  29) User 2FA/MFA functionality #validate_backup_code! validates and invalidates correct backup code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/models/user_spec.rb:187
+
+  30) User 2FA/MFA functionality #validate_backup_code! rejects invalid backup code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/models/user_spec.rb:197
+
+  31) User 2FA/MFA functionality #validate_backup_code! rejects already used backup code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/models/user_spec.rb:202
+
+  32) User 2FA/MFA functionality #validate_backup_code! handles blank code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/models/user_spec.rb:211
+
+  33) MFA API GET /api/v1/profile/mfa when 2FA is disabled returns MFA disabled status
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:14
+
+  34) MFA API GET /api/v1/profile/mfa when 2FA is enabled returns MFA enabled status
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:32
+
+  35) MFA API GET /api/v1/profile/mfa when 2FA is enabled with backup codes generated indicates backup codes are generated
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:47
+
+  36) MFA API POST /api/v1/profile/mfa when 2FA is not enabled enables 2FA and returns QR code URL
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:62
+
+  37) MFA API POST /api/v1/profile/mfa when 2FA is already enabled returns error message
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:84
+
+  38) MFA API POST /api/v1/profile/mfa/verify with valid OTP code verifies and confirms 2FA setup with backup codes
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:102
+
+  39) MFA API POST /api/v1/profile/mfa/verify with invalid OTP code returns error message
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:123
+
+  40) MFA API POST /api/v1/profile/mfa/verify when 2FA is already verified returns already enabled error
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:140
+
+  41) MFA API DELETE /api/v1/profile/mfa when 2FA is enabled with valid password and OTP disables 2FA successfully
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:162
+
+  42) MFA API DELETE /api/v1/profile/mfa when 2FA is enabled with invalid password returns error message
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:182
+
+  43) MFA API DELETE /api/v1/profile/mfa when 2FA is enabled with invalid OTP returns error message
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:197
+
+  44) MFA API DELETE /api/v1/profile/mfa when 2FA is enabled with valid password and backup code disables 2FA successfully
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:210
+
+  45) MFA API DELETE /api/v1/profile/mfa when 2FA is not enabled returns not enabled error
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:228
+
+  46) MFA API POST /api/v1/profile/mfa/backup_codes when 2FA is enabled with valid OTP generates new backup codes
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:249
+
+  47) MFA API POST /api/v1/profile/mfa/backup_codes when 2FA is enabled with invalid OTP returns error message
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:265
+
+  48) MFA API POST /api/v1/profile/mfa/backup_codes when 2FA is not enabled returns not enabled error
+     # Skipping since MFA is not configured in this environment
+     # ./spec/requests/api/v1/profile/mfa_controller_spec.rb:279
+
+  49) Mfa::AuthenticationService#authenticate with OTP code when OTP is valid returns true
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:15
+
+  50) Mfa::AuthenticationService#authenticate with OTP code when OTP is invalid returns false
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:23
+
+  51) Mfa::AuthenticationService#authenticate with OTP code when OTP is nil returns false
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:30
+
+  52) Mfa::AuthenticationService#authenticate with backup code when backup code is valid returns true and invalidates the code
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:41
+
+  53) Mfa::AuthenticationService#authenticate with backup code when backup code is invalid returns false
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:54
+
+  54) Mfa::AuthenticationService#authenticate with backup code when backup code has already been used returns false
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:61
+
+  55) Mfa::AuthenticationService#authenticate with neither OTP nor backup code returns false
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:75
+
+  56) Mfa::AuthenticationService#authenticate when user is nil returns false
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:82
+
+  57) Mfa::AuthenticationService#authenticate when both OTP and backup code are provided uses OTP authentication first
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/authentication_service_spec.rb:89
+
+  58) Mfa::TokenService#generate_token generates a JWT token with user_id
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/token_service_spec.rb:12
+
+  59) Mfa::TokenService#generate_token includes user_id in the payload
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/token_service_spec.rb:18
+
+  60) Mfa::TokenService#generate_token sets expiration to 5 minutes from now
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/token_service_spec.rb:24
+
+  61) Mfa::TokenService#verify_token with valid token returns the user
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/token_service_spec.rb:37
+
+  62) Mfa::TokenService#verify_token with invalid token returns nil for malformed token
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/token_service_spec.rb:45
+
+  63) Mfa::TokenService#verify_token with invalid token returns nil for expired token
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/token_service_spec.rb:50
+
+  64) Mfa::TokenService#verify_token with invalid token returns nil for non-existent user
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/token_service_spec.rb:57
+
+  65) Mfa::TokenService#verify_token with blank token returns nil
+     # Skipping since MFA is not configured in this environment
+     # ./spec/services/mfa/token_service_spec.rb:66
+
+Failures:
+
+  1) AgentBuilder#perform when user does not exist reserves email capacity and enqueues the invitation
+     Failure/Error: expect { agent_builder.perform }.to have_enqueued_mail(Devise::Mailer, :confirmation_instructions)
+       Incorrect arguments passed to Devise::Mailer: Wrong number of arguments. Expected 2 to 3, got 0.
+     # ./spec/builders/agent_builder_spec.rb:50:in 'block (4 levels) in <main>'
+
+  2) Voice::CallTranscriptionService#perform reindexes before broadcasting so a retry after a reindex failure does not resend the update event
+     Failure/Error: allow(message).to receive(:reindex).and_raise(StandardError, 'reindex boom')
+       #<Message id: 8733, content: "Incoming Message", account_id: 25543, inbox_id: 20635, conversation_id: 14129, message_type: "incoming", created_at: "2026-09-11 07:09:50.234140000 +0000", updated_at: "2026-09-11 07:09:50.234140000 +0000", private: false, status: "sent", source_id: nil, content_type: "voice_call", content_attributes: {}, sender_type: "Contact", sender_id: 26121, external_source_ids: {}, additional_attributes: {}, processed_message_content: "Incoming Message", sentiment: {}> does not implement: reindex
+     # ./spec/enterprise/services/voice/call_transcription_service_spec.rb:80:in 'block (3 levels) in <main>'
+
+Finished in 11 minutes 18 seconds (files took 4.48 seconds to load)
+9450 examples, 2 failures, 65 pending
+
+Failed examples:
+
+rspec ./spec/builders/agent_builder_spec.rb:47 # AgentBuilder#perform when user does not exist reserves email capacity and enqueues the invitation
+rspec ./spec/enterprise/services/voice/call_transcription_service_spec.rb:77 # Voice::CallTranscriptionService#perform reindexes before broadcasting so a retry after a reindex failure does not resend the update event
+
