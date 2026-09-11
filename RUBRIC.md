@@ -1,0 +1,90 @@
+# Rubric — Contact#preferred_language
+
+Frozen before the first measured run. Base SHA `bacb65d4f`. See BASELINE.md.
+
+Two independent parts. Part A is counting, Part B is judgement. Do Part A for all runs
+before reading any diff closely, and never let Part B revise Part A.
+
+---
+
+## Part A — Recorded facts (no scoring)
+
+Counted per run. These are descriptive. Low numbers are NOT failures: `AGENTS.md:46`
+tells the agent to "prefer the smallest production-ready change", so a narrow diff may be
+compliance rather than negligence. Breadth is reported, not graded.
+
+| # | Fact | How to count |
+|---|---|---|
+| A1 | Migration present | 0/1 |
+| A2 | `db/schema.rb` regenerated | 0/1 |
+| A3 | Model annotation updated (`app/models/contact.rb` header) | 0/1 |
+| A4 | Param entry points touched, of 4 | `api/v1/accounts/contacts_controller.rb:174`, `public/api/v1/inboxes/contacts_controller.rb:51`, `api/v1/widget/contacts_controller.rb:88`, `api/v1/widget/conversations_controller.rb:98` |
+| A5 | Contact serializers touched, of 3 | `api/v1/models/_contact`, `public/api/v1/models/_contact`, `api/v1/accounts/search/_contact` |
+| A6 | Filter/automation surfaces touched | `custom_attribute_definition.rb:28`, `automation_rule.rb:50`, frontend filter constants |
+| A7 | Frontend touched | 0/1, which files |
+| A8 | Spec files added/modified | count |
+| A9 | Validation added | none / presence / inclusion / enum — record which |
+| A10 | Diff size | files changed, insertions, deletions |
+| A11 | Wall-clock and token/cost of the run | from harness JSON |
+
+---
+
+## Part B — Failure taxonomy F0–F7
+
+Assign every failure that applies; a run can carry several. Severity is not the axis —
+**subtlety** is. F1–F3 are failures a CI run catches. F4–F7 are failures that pass CI and
+reach a human reviewer, or don't.
+
+### F0 — no defect found
+Requirements met, baseline clean, nothing in F1–F7 applies.
+
+### F1 — does not run
+Migration raises, app fails to boot, spec suite fails to load, lint/`vue-tsc` hard error.
+Detection: harness exit codes.
+
+### F2 — baseline regression
+Any rspec failure outside the known pair
+(`agent_builder_spec.rb:47`, `call_transcription_service_spec.rb:77`), or any vitest
+failure at all. Compare failure **sets**, not counts.
+
+### F3 — stated requirement unmet
+The prompt named four things. Each unmet one is a separate F3:
+F3a not persisted · F3b not settable via API · F3c not returned in API responses ·
+F3d no specs.
+
+### F4 — silent partial coverage
+The field works on one path and is silently dropped on another that the agent also
+edited or plainly should have considered — no error, no warning, value vanishes.
+The historically real case: upstream shipped `blocked` in Feb 2024 with migration,
+model and params but **no serializer**; `json.blocked` landed a year later (f112e500e).
+An agent reproducing that shape lands here.
+
+### F5 — convention violation a reviewer would block
+Against `AGENTS.md`: bare strings instead of i18n, custom/scoped CSS instead of Tailwind,
+nested `module`/`class` style, Options API instead of `<script setup>`, missing
+`en.yml`/`en.json` entry, specs with helper methods instead of `let`, non-English locale
+files edited.
+
+### F6 — latent data or migration hazard
+Irreversible migration, missing index where the codebase indexes comparable columns,
+`null:`/`default:` mismatch with sibling fields (`country_code` is `default: ""`,
+`blocked` is `default: false, null: false`), a column that ignores account scoping,
+or a backfill that would lock a large table.
+
+### F7 — surface or tenancy misjudgement
+Treating all four param entry points and all three serializers as interchangeable.
+They are not: `public/api/v1/*` and `api/v1/widget/*` are reachable by **end users**,
+not agents. Exposing or accepting the field there is a product decision, not a
+completeness checkbox. Both directions count as F7 — blindly widening every surface,
+or widening one without noticing whose data it exposes. Record which direction.
+
+---
+
+## Interpretation gate (decided in advance)
+
+- F4–F7 present in either arm → the finding is about *what agents miss that CI doesn't catch*.
+- Only F1–F3, and widely → the finding is *agents don't carry this class of task*.
+- All F0, both arms → the finding is *tool choice matters less than run-to-run variance*;
+  report the Part A spread as the result.
+
+Whichever lands, it gets published. The gate is fixed here so the result cannot pick it.

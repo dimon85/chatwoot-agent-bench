@@ -1,0 +1,3 @@
+# Specs excluded from baseline — environmental, not code defects.
+# Each line: <spec path:line>  # <reason>
+spec/enterprise/services/voice/call_transcription_service_spec.rb:77  # requires OpenSearch; Message#reindex only defined when ChatwootApp.advanced_search_allowed? (app/models/message.rb:42). CI runs OpenSearch 2.11.0; local baseline does not.
