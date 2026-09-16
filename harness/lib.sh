@@ -33,3 +33,30 @@ redis_index_for() {
 db_name_for() { echo "chatwoot_bench_${1//[^a-zA-Z0-9_]/_}"; }
 
 die() { echo "FATAL: $*" >&2; exit 1; }
+
+# Derive .env for a worktree. NEVER a plain copy of .env.example: it ships
+# FRONTEND_URL=0.0.0.0 which CI deletes, and leaving it in produces five false
+# failures. Each worktree also needs its own database and Redis index, because
+# git worktrees isolate files but not services.
+derive_env() {
+  local dir="$1" run_id="$2"
+  local db=$(db_name_for "$run_id")
+  local redis_db=$(redis_index_for "$run_id")
+  cp "$dir/.env.example" "$dir/.env"
+  sed -i '' '/^FRONTEND_URL/d' "$dir/.env"
+  sed -i '' 's|^POSTGRES_HOST=postgres$|POSTGRES_HOST=localhost|' "$dir/.env"
+  sed -i '' "s|^REDIS_URL=redis://redis:6379$|REDIS_URL=redis://localhost:6379/$redis_db|" "$dir/.env"
+  sed -i '' "s|^SECRET_KEY_BASE=replace_with_lengthy_secure_hex$|SECRET_KEY_BASE=$(openssl rand -hex 64)|" "$dir/.env"
+  echo "POSTGRES_DATABASE=$db" >> "$dir/.env"
+  echo "env:       db=$db redis_db=$redis_db"
+}
+
+prepare_db() {
+  local dir="$1" run_id="$2"
+  local db=$(db_name_for "$run_id")
+  ( cd "$dir" && RAILS_ENV=test POSTGRES_DATABASE="$db" \
+      bundle exec rails db:chatwoot_prepare >/dev/null 2>&1 )
+  local tables=$(psql -d "$db" -tc "SELECT count(*) FROM information_schema.tables WHERE table_schema='public';" | tr -d ' ')
+  [ "$tables" -ge 100 ] || die "database $db looks wrong: $tables tables"
+  echo "db:        $db ready ($tables tables)"
+}

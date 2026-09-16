@@ -1,7 +1,10 @@
 #!/bin/zsh
 # Measure a worktree after an agent has finished working in it.
 #
-#   ./measure.sh <run_id> [agent_label]
+#   ./measure.sh <run_id> [agent_label] [path-to-worktree]
+#
+# The worktree path defaults to whatever provisioned this run_id, so a worktree
+# created by Orca is measured the same way as one created by new_worktree.sh.
 #
 # Runs every suite SERIALLY and on a quiet machine. The baseline was measured
 # that way; running suites concurrently makes wall-clock meaningless and can
@@ -13,7 +16,7 @@ setup_toolchain
 
 RUN_ID="${1:?usage: measure.sh <run_id> [agent_label]}"
 AGENT="${2:-unknown}"
-WT="$WORKTREE_DIR/$RUN_ID"
+WT="${3:-$(cat "$BENCH_ROOT/.worktree-$RUN_ID" 2>/dev/null || echo "$WORKTREE_DIR/$RUN_ID")}"
 OUT="$RESULTS_DIR/$RUN_ID"
 DB=$(db_name_for "$RUN_ID")
 
