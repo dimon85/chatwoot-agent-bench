@@ -37,6 +37,23 @@ Interleaving the arms is fine and arguably better — it spreads any drift in th
 machine or the services across both. Do not run two at once: the measurement is
 timed and the suites compete for CPU and Postgres.
 
+## Time-of-day pricing
+
+DeepSeek prices by the clock — off-peak runs are cheaper than peak ones. The series
+takes about three hours and can straddle a boundary, which would make part of one arm
+look cheaper for reasons that have nothing to do with the model.
+
+Handled by not measuring cost at all. The harness records `run_window_utc` per run
+and the token counts; cost is computed afterwards from a rate card written down in
+the analysis, stating which window each run fell in. Tokens are invariant, the rate
+is not — and a rate card recorded as a number in a results file cannot be rechecked
+later, while tokens plus a timestamp can.
+
+Before the series, write the current DeepSeek rate card and its off-peak hours into
+`ANALYSIS.md` with the date you read them and a link. Do the same for the Anthropic
+rates. If the whole series fits inside one window, say so; if it does not, report the
+DeepSeek arm at both rates.
+
 ## After each run
 
 Check only this:

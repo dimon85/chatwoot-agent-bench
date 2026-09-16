@@ -35,6 +35,11 @@ EFFORT="${EFFORT:-medium}"
 
 cd "$WT"
 start=$(date +%s)
+# UTC start/end are recorded because some providers price by time of day
+# (DeepSeek runs off-peak discounts). Cost is therefore NOT measured here: tokens
+# are invariant, the rate is not. Compute cost in the analysis from a stated rate
+# card, and state which window each run fell in.
+date -u +"%Y-%m-%dT%H:%M:%SZ" > "$OUT/agent.started_utc"
 case "$AGENT" in
   claude)
     echo "model: $CLAUDE_MODEL effort: $EFFORT" > "$OUT/agent.model"
@@ -52,6 +57,7 @@ case "$AGENT" in
     ;;
   *) die "unknown agent: $AGENT" ;;
 esac
+date -u +"%Y-%m-%dT%H:%M:%SZ" > "$OUT/agent.finished_utc"
 echo "$AGENT $(( $(date +%s) - start ))" > "$OUT/agent.status"
 echo "agent $AGENT finished in $(( $(date +%s) - start ))s"
 git -C "$WT" status --short | head -20

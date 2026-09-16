@@ -58,6 +58,17 @@ def rubocop_summary():
             'files_inspected': d['summary']['inspected_file_count']}
 
 
+def run_window():
+    """When the agent ran, in UTC. Providers with time-of-day pricing (DeepSeek's
+    off-peak discount) make cost a function of the clock, so the window is part of
+    the measurement and cost is derived later from a stated rate card."""
+    def read(name):
+        f = out / name
+        return f.read_text().strip() if f.exists() else None
+    return {'started_utc': read('agent.started_utc'),
+            'finished_utc': read('agent.finished_utc')}
+
+
 def agent_summary():
     """Effort the agent spent. Tokens, turns and wall-clock are the comparable
     figures; the dollar number is annotation only — Claude Code reports it with
@@ -158,6 +169,7 @@ metrics = {
         'eslint': status('eslint'),
         'rubocop': {**status('rubocop'), **rubocop_summary()},
     },
+    'run_window_utc': run_window(),
     'agent_effort': agent_summary(),
     'diff': diff_summary(),
 }
