@@ -43,7 +43,18 @@ before_hash=$(shasum "$OUT/changes.patch" | cut -d' ' -f1)
 #
 # db:test:prepare carries no such hook, and resetting from schema.rb also
 # discards whatever state the agent left behind — which is what isolation means.
-bundle exec rails db:test:prepare > "$OUT/migrate.log" 2>&1 || true
+# DISABLE_DATABASE_ENVIRONMENT_CHECK is required, not optional. Chatwoot's
+# database.yml reads POSTGRES_DATABASE for BOTH development and test, so pinning
+# one name per worktree points both environments at the same database. An agent
+# running `rails db:migrate` without RAILS_ENV=test stamps it as development, and
+# db:test:prepare then refuses to purge — silently leaving the ConfigLoader rows
+# in place and failing ~430 specs. Purging is exactly what we want here: the test
+# database is rebuilt from the agent's schema.rb on every measurement.
+DISABLE_DATABASE_ENVIRONMENT_CHECK=1 \
+  bundle exec rails db:test:prepare > "$OUT/migrate.log" 2>&1
+
+# A failed reset invalidates the whole measurement — do not measure on a dirty database.
+grep -qi "aborted\|error" "$OUT/migrate.log" && die "db:test:prepare failed, see $OUT/migrate.log"
 
 run_step() {
   local name="$1"; shift
