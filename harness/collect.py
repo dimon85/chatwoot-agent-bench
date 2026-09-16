@@ -58,6 +58,43 @@ def rubocop_summary():
             'files_inspected': d['summary']['inspected_file_count']}
 
 
+def agent_summary():
+    """Effort the agent spent. Tokens, turns and wall-clock are the comparable
+    figures; the dollar number is annotation only — Claude Code reports it with
+    costBasis "list", i.e. usage priced at published API rates, which is not what
+    a subscription run costs anyone."""
+    f = out / 'agent.json'
+    if not f.exists():
+        return {'parsed': False}
+    d = json.loads(f.read_text())
+    u = d.get('usage', {})
+    per_model = {m: {'input': v.get('inputTokens'), 'output': v.get('outputTokens'),
+                     'cache_read': v.get('cacheReadInputTokens'),
+                     'cache_write': v.get('cacheCreationInputTokens'),
+                     'thinking': v.get('thinkingTokens'),
+                     'cost_basis': v.get('costBasis')}
+                 for m, v in (d.get('modelUsage') or {}).items()}
+    return {
+        'parsed': True,
+        'turns': d.get('num_turns'),
+        'wall_s': (d.get('duration_ms') or 0) // 1000,
+        'is_error': d.get('is_error'),
+        'stop_reason': d.get('stop_reason'),
+        'permission_denials': len(d.get('permission_denials') or []),
+        'tokens': {
+            'input': u.get('input_tokens'),
+            'output': u.get('output_tokens'),
+            'cache_read': u.get('cache_read_input_tokens'),
+            'cache_write': u.get('cache_creation_input_tokens'),
+        },
+        'per_model': per_model,
+        'list_price_equivalent_usd': d.get('total_cost_usd'),
+        'note': 'list_price_equivalent_usd is NOT money billed: both arms run on '
+                'subscriptions and each vendor prices its own tokens. Compare '
+                'tokens/turns/wall_s instead.',
+    }
+
+
 def diff_summary():
     stat = out / 'changes.stat'
     if not stat.exists():
@@ -85,6 +122,7 @@ metrics = {
         'eslint': status('eslint'),
         'rubocop': {**status('rubocop'), **rubocop_summary()},
     },
+    'agent_effort': agent_summary(),
     'diff': diff_summary(),
 }
 
@@ -104,3 +142,8 @@ else:
     print('  rspec   DID NOT PRODUCE JSON (see rspec.log)')
 d = metrics['diff']
 print(f"  diff    {d['files_changed']} files, +{d['insertions']}/-{d['deletions']}")
+a = metrics['agent_effort']
+if a.get('parsed'):
+    t = a['tokens']
+    print(f"  agent   {a['turns']} turns, {a['wall_s']}s, "
+          f"out={t['output']} cache_read={t['cache_read']}")

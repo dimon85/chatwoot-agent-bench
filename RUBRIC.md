@@ -27,7 +27,8 @@ compliance rather than negligence. Breadth is reported, not graded.
 | A8 | Spec files added/modified | count |
 | A9 | Validation added | none / presence / inclusion / enum — record which |
 | A10 | Diff size | files changed, insertions, deletions |
-| A11 | Wall-clock and token/cost of the run | from harness JSON |
+| A11 | Run effort | Primary and comparable: input / output / cache-read / cache-write tokens, turns, wall-clock seconds |
+| A11b | Dollar figure | Annotation only, never an axis of comparison. Claude Code's `total_cost_usd` carries `costBasis: "list"` — it is token usage priced at published API rates, not money billed. Both arms run on subscriptions, so nothing is charged per token, and each vendor's figure uses its own price list. Record it; do not compare it. |
 
 ---
 
@@ -121,3 +122,20 @@ artifacts.
 
 Recorded after pilot-1 and pilot-2, both of which are excluded from the measured
 set and published as pilots.
+
+### 2026-09-16 — split A11 into effort and dollars (before any measured run)
+
+Both arms run on subscriptions, so no per-token money changes hands. Claude Code's
+`total_cost_usd` is explicitly `costBasis: "list"` — token usage priced at published
+API rates. In pilot-1 it was $1.54, almost all of it 1.39M cache-read tokens: the
+number tracks how much context the agent re-read, not what the run cost anyone.
+
+Worse for a comparison: the other arm's figure would be computed from a different
+vendor's price list. Comparing the two would measure pricing policy, not agents —
+and a vendor repricing its cache would change the "winner" with no change in
+behaviour.
+
+Tokens, turns and wall-clock are independent of price lists, so they become the
+comparable metric. The dollar figure stays as an annotation.
+
+No scoring changed; this is a labelling correction.
