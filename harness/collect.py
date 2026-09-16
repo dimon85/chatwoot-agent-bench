@@ -63,6 +63,8 @@ def agent_summary():
     figures; the dollar number is annotation only — Claude Code reports it with
     costBasis "list", i.e. usage priced at published API rates, which is not what
     a subscription run costs anyone."""
+    if (out / 'agent.jsonl').exists():
+        return codex_effort()
     f = out / 'agent.json'
     if not f.exists():
         return {'parsed': False}
@@ -92,6 +94,40 @@ def agent_summary():
         'note': 'list_price_equivalent_usd is NOT money billed: both arms run on '
                 'subscriptions and each vendor prices its own tokens. Compare '
                 'tokens/turns/wall_s instead.',
+    }
+
+
+def codex_effort():
+    """Codex emits JSONL events; usage lands on turn.completed."""
+    events = []
+    for line in (out / 'agent.jsonl').read_text().splitlines():
+        line = line.strip()
+        if line.startswith('{'):
+            try:
+                events.append(json.loads(line))
+            except json.JSONDecodeError:
+                pass
+    turns = [e for e in events if e.get('type') == 'turn.completed']
+    tot = {'input': 0, 'output': 0, 'cache_read': 0, 'cache_write': 0, 'reasoning': 0}
+    for t in turns:
+        u = t.get('usage') or {}
+        tot['input'] += u.get('input_tokens', 0)
+        tot['output'] += u.get('output_tokens', 0)
+        tot['cache_read'] += u.get('cached_input_tokens', 0)
+        tot['cache_write'] += u.get('cache_write_input_tokens', 0)
+        tot['reasoning'] += u.get('reasoning_output_tokens', 0)
+    status = out / 'agent.status'
+    wall = int(status.read_text().split()[1]) if status.exists() else None
+    return {
+        'parsed': True,
+        'turns': len(turns),
+        'items': len([e for e in events if e.get('type') == 'item.completed']),
+        'wall_s': wall,
+        'is_error': any(e.get('type') == 'error' for e in events),
+        'tokens': tot,
+        'per_model': {},
+        'list_price_equivalent_usd': None,
+        'note': 'Codex reports no dollar figure. Token counts are the comparable metric.',
     }
 
 

@@ -43,9 +43,12 @@ case "$AGENT" in
     ;;
   codex)
     echo "model: $CODEX_MODEL effort: $EFFORT" > "$OUT/agent.model"
+    # --json emits JSONL events including per-turn token usage, so the effort
+    # metrics are comparable with the Claude arm. stdin is closed: codex exec
+    # reads it by default and would block a detached run.
     codex exec --model "$CODEX_MODEL" -c "model_reasoning_effort=$EFFORT" \
-      --dangerously-bypass-approvals-and-sandbox "$PROMPT" \
-      > "$OUT/agent.log" 2>"$OUT/agent.err" || true
+      --json --dangerously-bypass-approvals-and-sandbox "$PROMPT" \
+      < /dev/null > "$OUT/agent.jsonl" 2>"$OUT/agent.err" || true
     ;;
   *) die "unknown agent: $AGENT" ;;
 esac

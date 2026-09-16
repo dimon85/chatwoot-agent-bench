@@ -31,9 +31,19 @@ git add -A
 git diff --cached "$BASE_TAG" > "$OUT/changes.patch"
 git diff --cached --stat "$BASE_TAG" > "$OUT/changes.stat"
 git reset -q
+before_hash=$(shasum "$OUT/changes.patch" | cut -d' ' -f1)
 
-# Schema changes only reach the test DB if migrations are applied.
-bundle exec rails db:migrate > "$OUT/migrate.log" 2>&1 || true
+# Load the agent's schema.rb into a reset test database.
+#
+# NOT db:migrate: lib/tasks/db_enhancements.rake hooks ConfigLoader onto that
+# task, so every invocation writes 113 rows into installation_configs — and a
+# suite that expects the table empty then fails in ~360 places across unrelated
+# areas. An agent running db:migrate itself (a perfectly normal thing to do)
+# would poison its own measurement and read as a catastrophic regression.
+#
+# db:test:prepare carries no such hook, and resetting from schema.rb also
+# discards whatever state the agent left behind — which is what isolation means.
+bundle exec rails db:test:prepare > "$OUT/migrate.log" 2>&1 || true
 
 run_step() {
   local name="$1"; shift
@@ -50,6 +60,15 @@ run_step rspec bundle exec rspec -I ./spec --require spec_helper --format progre
 run_step vitest pnpm test
 run_step eslint pnpm eslint
 run_step rubocop bundle exec rubocop --format json --out "$OUT/rubocop.json"
+
+# A measurement must not alter what it measures. An earlier version ran
+# db:migrate, which rewrote db/schema.rb and silently changed the artifact.
+git add -A
+after_hash=$(git diff --cached "$BASE_TAG" | shasum | cut -d' ' -f1)
+git reset -q
+if [ "$before_hash" != "$after_hash" ]; then
+  echo "WARNING: measurement modified the worktree — the recorded diff is not what the agent produced" | tee "$OUT/CONTAMINATED"
+fi
 
 BASE_SHA=$(git rev-parse "$BASE_TAG") \
 RUN_ID="$RUN_ID" AGENT="$AGENT" OUT="$OUT" KNOWN="${(j:,:)KNOWN_FAILURES}" \
