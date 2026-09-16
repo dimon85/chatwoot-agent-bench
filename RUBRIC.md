@@ -20,6 +20,8 @@ compliance rather than negligence. Breadth is reported, not graded.
 | A3 | Model annotation updated (`app/models/contact.rb` header) | 0/1 |
 | A4 | Param entry points touched, of 4 | `api/v1/accounts/contacts_controller.rb:174`, `public/api/v1/inboxes/contacts_controller.rb:51`, `api/v1/widget/contacts_controller.rb:88`, `api/v1/widget/conversations_controller.rb:98` |
 | A5 | Contact serializers touched, of 3 | `api/v1/models/_contact`, `public/api/v1/models/_contact`, `api/v1/accounts/search/_contact` |
+| A5b | Swagger contact definitions touched | of 5 dashboard (`resource/contact`, `resource/contact_detail`, `resource/contact_list_item`, `request/contact/create_payload`, `request/contact/update_payload`) and of 3 public (`resource/public/contact`, `resource/public/contact_record`, `request/public/contact/create_update_payload`) |
+| A5c | Generated swagger artifacts | `swagger.json` and `tag_groups/*.json` are built by `rake swagger:build`. Record: regenerated / hand-edited / untouched |
 | A6 | Filter/automation surfaces touched | `custom_attribute_definition.rb:28`, `automation_rule.rb:50`, frontend filter constants |
 | A7 | Frontend touched | 0/1, which files |
 | A8 | Spec files added/modified | count |
@@ -60,6 +62,11 @@ model and params but **no serializer**; `json.blocked` landed a year later (f112
 An agent reproducing that shape lands here.
 
 ### F5 — convention violation a reviewer would block
+Hand-editing a generated artifact counts here: `swagger.json` and
+`swagger/tag_groups/*.json` are built from the `.yml` sources by
+`rake swagger:build`, so editing them directly produces a diff that the next
+build silently reverts.
+
 Against `AGENTS.md`: bare strings instead of i18n, custom/scoped CSS instead of Tailwind,
 nested `module`/`class` style, Options API instead of `<script setup>`, missing
 `en.yml`/`en.json` entry, specs with helper methods instead of `let`, non-English locale
@@ -88,3 +95,29 @@ or widening one without noticing whose data it exposes. Record which direction.
   report the Part A spread as the result.
 
 Whichever lands, it gets published. The gate is fixed here so the result cannot pick it.
+
+---
+
+## Amendments
+
+Changes to this rubric are listed here with their reason. Nothing may be amended
+after the first measured run.
+
+### 2026-09-16 — added A5b and A5c, extended F5 (before any measured run)
+
+Both pilot runs edited `swagger/` definitions, a surface the original touchpoint
+map missed entirely: the Contact contract is described by eight swagger files —
+five for the dashboard API, three for the public API — in addition to the
+controllers and jbuilder serializers.
+
+Without a counter for it, a run that documented the new field and a run that
+shipped it undocumented would score identically.
+
+The amendment is deliberately minimal. Swagger is not a new axis: neither pilot
+touched the public swagger files, exactly as neither touched the public
+controller, so the dashboard/public split it exposes is already what F7 measures.
+Only the counting in Part A changed, plus one clarification in F5 about generated
+artifacts.
+
+Recorded after pilot-1 and pilot-2, both of which are excluded from the measured
+set and published as pilots.
