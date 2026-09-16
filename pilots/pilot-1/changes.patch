@@ -1,0 +1,520 @@
+diff --git a/app/controllers/api/v1/accounts/contacts_controller.rb b/app/controllers/api/v1/accounts/contacts_controller.rb
+index bc1082583..4701e2ae4 100644
+--- a/app/controllers/api/v1/accounts/contacts_controller.rb
++++ b/app/controllers/api/v1/accounts/contacts_controller.rb
+@@ -171,7 +171,8 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
+   end
+ 
+   def permitted_params
+-    params.permit(:name, :identifier, :email, :phone_number, :avatar, :blocked, :avatar_url, additional_attributes: {}, custom_attributes: {})
++    params.permit(:name, :identifier, :email, :phone_number, :avatar, :blocked, :avatar_url, :preferred_language,
++                  additional_attributes: {}, custom_attributes: {})
+   end
+ 
+   def contact_custom_attributes
+diff --git a/app/models/contact.rb b/app/models/contact.rb
+index a63b164bb..86a4bd0c9 100644
+--- a/app/models/contact.rb
++++ b/app/models/contact.rb
+@@ -18,6 +18,7 @@
+ #  middle_name           :string           default("")
+ #  name                  :string           default("")
+ #  phone_number          :string
++#  preferred_language    :string           default("")
+ #  created_at            :datetime         not null
+ #  updated_at            :datetime         not null
+ #  account_id            :integer          not null
+diff --git a/app/views/api/v1/models/_contact.json.jbuilder b/app/views/api/v1/models/_contact.json.jbuilder
+index a76166a57..45bd02465 100644
+--- a/app/views/api/v1/models/_contact.json.jbuilder
++++ b/app/views/api/v1/models/_contact.json.jbuilder
+@@ -6,6 +6,7 @@ json.name resource.name
+ json.phone_number resource.phone_number
+ json.blocked resource.blocked
+ json.identifier resource.identifier
++json.preferred_language resource.preferred_language
+ json.company_id resource.company_id if Current.account&.feature_enabled?('companies')
+ json.thumbnail resource.avatar_url
+ json.custom_attributes resource.custom_attributes
+diff --git a/db/migrate/20260916000000_add_preferred_language_to_contacts.rb b/db/migrate/20260916000000_add_preferred_language_to_contacts.rb
+new file mode 100644
+index 000000000..19ef9bfc7
+--- /dev/null
++++ b/db/migrate/20260916000000_add_preferred_language_to_contacts.rb
+@@ -0,0 +1,5 @@
++class AddPreferredLanguageToContacts < ActiveRecord::Migration[7.1]
++  def change
++    add_column :contacts, :preferred_language, :string, default: ''
++  end
++end
+diff --git a/db/schema.rb b/db/schema.rb
+index a6711fe01..43ae3ba8a 100644
+--- a/db/schema.rb
++++ b/db/schema.rb
+@@ -10,7 +10,7 @@
+ #
+ # It's strongly recommended that you check this file into your version control system.
+ 
+-ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
++ActiveRecord::Schema[7.2].define(version: 2026_09_16_000000) do
+   # These extensions should be enabled to support this database
+   enable_extension "pg_stat_statements"
+   enable_extension "pg_trgm"
+@@ -505,8 +505,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
+     t.integer "status", default: 0, null: false
+     t.datetime "created_at", null: false
+     t.datetime "updated_at", null: false
+-    t.index ["account_id"], name: "index_captain_faq_suggestions_on_account_id"
+     t.index ["account_id", "assistant_id", "status", "language"], name: "idx_cap_faq_suggestions_on_account_assistant_status_language"
++    t.index ["account_id"], name: "index_captain_faq_suggestions_on_account_id"
+     t.index ["assistant_id"], name: "index_captain_faq_suggestions_on_assistant_id"
+     t.index ["embedding"], name: "vector_idx_captain_faq_suggestions_embedding", opclass: :vector_cosine_ops, using: :ivfflat
+   end
+@@ -749,8 +749,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
+     t.jsonb "phone_number_health", default: {}, null: false
+     t.datetime "phone_number_health_checked_at"
+     t.string "phone_number_health_error", limit: 500
+-    t.index ["phone_number_health_checked_at"], name: "index_channel_whatsapp_on_phone_number_health_checked_at"
+     t.index ["phone_number"], name: "index_channel_whatsapp_on_phone_number", unique: true
++    t.index ["phone_number_health_checked_at"], name: "index_channel_whatsapp_on_phone_number_health_checked_at"
+   end
+ 
+   create_table "companies", force: :cascade do |t|
+@@ -802,6 +802,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
+     t.string "country_code", default: ""
+     t.boolean "blocked", default: false, null: false
+     t.bigint "company_id"
++    t.string "preferred_language", default: ""
+     t.index "lower((email)::text), account_id", name: "index_contacts_on_lower_email_account_id"
+     t.index ["account_id", "contact_type"], name: "index_contacts_on_account_id_and_contact_type"
+     t.index ["account_id", "email", "phone_number", "identifier"], name: "index_contacts_on_nonempty_fields", where: "(((email)::text <> ''::text) OR ((phone_number)::text <> ''::text) OR ((identifier)::text <> ''::text))"
+@@ -1090,10 +1091,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
+     t.datetime "created_at", null: false
+     t.datetime "updated_at", null: false
+     t.integer "inbox_id"
+-    t.index ["account_id", "name", "template_type", "locale"], name: "index_email_templates_on_account_scope", unique: true, where: "(account_id IS NOT NULL) AND (inbox_id IS NULL)"
++    t.index ["account_id", "name", "template_type", "locale"], name: "index_email_templates_on_account_scope", unique: true, where: "((account_id IS NOT NULL) AND (inbox_id IS NULL))"
+     t.index ["inbox_id", "name", "template_type", "locale"], name: "index_email_templates_on_inbox_scope", unique: true, where: "(inbox_id IS NOT NULL)"
+     t.index ["inbox_id"], name: "index_email_templates_on_inbox_id"
+-    t.index ["name", "template_type", "locale"], name: "index_email_templates_on_installation_scope", unique: true, where: "(account_id IS NULL) AND (inbox_id IS NULL)"
++    t.index ["name", "template_type", "locale"], name: "index_email_templates_on_installation_scope", unique: true, where: "((account_id IS NULL) AND (inbox_id IS NULL))"
+   end
+ 
+   create_table "folders", force: :cascade do |t|
+diff --git a/spec/controllers/api/v1/accounts/contacts_controller_spec.rb b/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
+index 9468b273c..84fc96e8b 100644
+--- a/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
++++ b/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
+@@ -503,6 +503,17 @@ RSpec.describe 'Contacts API', type: :request do
+         expect(response).to conform_schema(200)
+         expect(response.body).to include(contact.name)
+       end
++
++      it 'returns the preferred language of the contact' do
++        contact.update!(preferred_language: 'fr')
++
++        get "/api/v1/accounts/#{account.id}/contacts/#{contact.id}",
++            headers: admin.create_new_auth_token,
++            as: :json
++
++        expect(response).to have_http_status(:success)
++        expect(response.parsed_body['payload']['preferred_language']).to eq('fr')
++      end
+     end
+   end
+ 
+@@ -586,6 +597,16 @@ RSpec.describe 'Contacts API', type: :request do
+         expect(json_response['message']).to eq('Name is too long (maximum is 255 characters)')
+       end
+ 
++      it 'creates the contact with the preferred language' do
++        post "/api/v1/accounts/#{account.id}/contacts", headers: admin.create_new_auth_token,
++                                                        params: valid_params.merge({ preferred_language: 'fr' }),
++                                                        as: :json
++
++        expect(response).to have_http_status(:success)
++        expect(response.parsed_body['payload']['contact']['preferred_language']).to eq('fr')
++        expect(Contact.last.preferred_language).to eq('fr')
++      end
++
+       it 'creates the contact inbox when inbox id is passed' do
+         expect do
+           post "/api/v1/accounts/#{account.id}/contacts", headers: admin.create_new_auth_token,
+@@ -631,6 +652,18 @@ RSpec.describe 'Contacts API', type: :request do
+         expect(contact.additional_attributes).to eq({ 'attr1' => 'attr1', 'attr2' => 'new attr2', 'attr3' => 'attr3' })
+       end
+ 
++      it 'updates the preferred language of the contact' do
++        patch "/api/v1/accounts/#{account.id}/contacts/#{contact.id}",
++              headers: admin.create_new_auth_token,
++              params: valid_params.merge({ preferred_language: 'fr' }),
++              as: :json
++
++        expect(response).to have_http_status(:success)
++        expect(response).to conform_schema(200)
++        expect(response.parsed_body['payload']['preferred_language']).to eq('fr')
++        expect(contact.reload.preferred_language).to eq('fr')
++      end
++
+       it 'prevents the update of contact of another account' do
+         other_account = create(:account)
+         other_contact = create(:contact, account: other_account)
+diff --git a/swagger/definitions/request/contact/create_payload.yml b/swagger/definitions/request/contact/create_payload.yml
+index 7f74e501c..2ecdab0d9 100644
+--- a/swagger/definitions/request/contact/create_payload.yml
++++ b/swagger/definitions/request/contact/create_payload.yml
+@@ -34,6 +34,10 @@ properties:
+     type: string
+     description: A unique identifier for the contact in external system
+     example: '1234567890'
++  preferred_language:
++    type: string
++    description: The language the contact prefers to be contacted in
++    example: fr
+   additional_attributes:
+     type: object
+     description: An object where you can store additional attributes for contact. example {"type":"customer", "age":30}
+diff --git a/swagger/definitions/request/contact/update_payload.yml b/swagger/definitions/request/contact/update_payload.yml
+index 99bec3548..2d1ab80a2 100644
+--- a/swagger/definitions/request/contact/update_payload.yml
++++ b/swagger/definitions/request/contact/update_payload.yml
+@@ -28,6 +28,10 @@ properties:
+     type: string
+     description: A unique identifier for the contact in external system
+     example: '1234567890'
++  preferred_language:
++    type: string
++    description: The language the contact prefers to be contacted in
++    example: fr
+   additional_attributes:
+     type: object
+     description: An object where you can store additional attributes for contact. example {"type":"customer", "age":30}
+diff --git a/swagger/definitions/resource/contact.yml b/swagger/definitions/resource/contact.yml
+index 259604f0d..8c3b263d1 100644
+--- a/swagger/definitions/resource/contact.yml
++++ b/swagger/definitions/resource/contact.yml
+@@ -29,6 +29,9 @@ properties:
+         identifier:
+           type: string
+           description: The identifier of the contact
++        preferred_language:
++          type: string
++          description: The language the contact prefers to be contacted in
+         thumbnail:
+           type: string
+           description: The thumbnail of the contact
+diff --git a/swagger/swagger.json b/swagger/swagger.json
+index e1bc96870..2f6ce6c89 100644
+--- a/swagger/swagger.json
++++ b/swagger/swagger.json
+@@ -10503,6 +10503,10 @@
+                   "type": "string",
+                   "description": "The identifier of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The language the contact prefers to be contacted in"
++                },
+                 "thumbnail": {
+                   "type": "string",
+                   "description": "The thumbnail of the contact"
+@@ -12907,6 +12911,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -12960,6 +12969,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+diff --git a/swagger/tag_groups/application_swagger.json b/swagger/tag_groups/application_swagger.json
+index 0aa95fae4..1b3bdfd34 100644
+--- a/swagger/tag_groups/application_swagger.json
++++ b/swagger/tag_groups/application_swagger.json
+@@ -9010,6 +9010,10 @@
+                   "type": "string",
+                   "description": "The identifier of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The language the contact prefers to be contacted in"
++                },
+                 "thumbnail": {
+                   "type": "string",
+                   "description": "The thumbnail of the contact"
+@@ -10388,8 +10392,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -10448,7 +10455,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -11404,6 +11418,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -11457,6 +11476,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+diff --git a/swagger/tag_groups/client_swagger.json b/swagger/tag_groups/client_swagger.json
+index 4a8835be1..006fbe1f5 100644
+--- a/swagger/tag_groups/client_swagger.json
++++ b/swagger/tag_groups/client_swagger.json
+@@ -1177,6 +1177,10 @@
+                   "type": "string",
+                   "description": "The identifier of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The language the contact prefers to be contacted in"
++                },
+                 "thumbnail": {
+                   "type": "string",
+                   "description": "The thumbnail of the contact"
+@@ -2555,8 +2559,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2615,7 +2622,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -3571,6 +3585,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -3624,6 +3643,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+diff --git a/swagger/tag_groups/other_swagger.json b/swagger/tag_groups/other_swagger.json
+index cbe853de0..0b7268d1e 100644
+--- a/swagger/tag_groups/other_swagger.json
++++ b/swagger/tag_groups/other_swagger.json
+@@ -592,6 +592,10 @@
+                   "type": "string",
+                   "description": "The identifier of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The language the contact prefers to be contacted in"
++                },
+                 "thumbnail": {
+                   "type": "string",
+                   "description": "The thumbnail of the contact"
+@@ -1970,8 +1974,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2030,7 +2037,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -2986,6 +3000,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -3039,6 +3058,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+diff --git a/swagger/tag_groups/platform_swagger.json b/swagger/tag_groups/platform_swagger.json
+index 56b23b9c7..7c239002f 100644
+--- a/swagger/tag_groups/platform_swagger.json
++++ b/swagger/tag_groups/platform_swagger.json
+@@ -1353,6 +1353,10 @@
+                   "type": "string",
+                   "description": "The identifier of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The language the contact prefers to be contacted in"
++                },
+                 "thumbnail": {
+                   "type": "string",
+                   "description": "The thumbnail of the contact"
+@@ -2731,8 +2735,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2791,7 +2798,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -3747,6 +3761,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -3800,6 +3819,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "The language the contact prefers to be contacted in",
++            "example": "fr"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",

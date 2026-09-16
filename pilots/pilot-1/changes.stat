@@ -1,0 +1,15 @@
+ .../api/v1/accounts/contacts_controller.rb         |  3 +-
+ app/models/contact.rb                              |  1 +
+ app/views/api/v1/models/_contact.json.jbuilder     |  1 +
+ ...916000000_add_preferred_language_to_contacts.rb |  5 ++++
+ db/schema.rb                                       | 11 ++++----
+ .../api/v1/accounts/contacts_controller_spec.rb    | 33 ++++++++++++++++++++++
+ .../definitions/request/contact/create_payload.yml |  4 +++
+ .../definitions/request/contact/update_payload.yml |  4 +++
+ swagger/definitions/resource/contact.yml           |  3 ++
+ swagger/swagger.json                               | 14 +++++++++
+ swagger/tag_groups/application_swagger.json        | 30 ++++++++++++++++++--
+ swagger/tag_groups/client_swagger.json             | 30 ++++++++++++++++++--
+ swagger/tag_groups/other_swagger.json              | 30 ++++++++++++++++++--
+ swagger/tag_groups/platform_swagger.json           | 30 ++++++++++++++++++--
+ 14 files changed, 181 insertions(+), 18 deletions(-)

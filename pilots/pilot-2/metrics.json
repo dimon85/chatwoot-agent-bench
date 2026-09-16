@@ -1,0 +1,66 @@
+{
+  "run_id": "pilot-2",
+  "agent": "claude-code",
+  "base_sha": "bacb65d4f683ef40abb21796efe54c38d01a6d90",
+  "recorded_at": "2026-09-16T15:49:58.139394+00:00",
+  "suites": {
+    "rspec": {
+      "exit_code": 1,
+      "duration_s": 683,
+      "parsed": true,
+      "examples": 9455,
+      "failures": 2,
+      "pending": 65,
+      "rspec_reported_duration_s": 675.2,
+      "failure_set": [
+        "./spec/builders/agent_builder_spec.rb:47",
+        "./spec/enterprise/services/voice/call_transcription_service_spec.rb:77"
+      ],
+      "unexpected_failures": [],
+      "baseline_failures_missing": [],
+      "matches_baseline": true
+    },
+    "vitest": {
+      "exit_code": 0,
+      "duration_s": 24,
+      "parsed": true,
+      "failed": 0,
+      "passed": 4582
+    },
+    "eslint": {
+      "exit_code": 0,
+      "duration_s": 17
+    },
+    "rubocop": {
+      "exit_code": 0,
+      "duration_s": 60,
+      "parsed": true,
+      "offenses": 0,
+      "files_inspected": 3036
+    }
+  },
+  "diff": {
+    "files_changed": 17,
+    "insertions": 287,
+    "deletions": 14,
+    "files": [
+      ".../api/v1/accounts/contacts_controller.rb",
+      "app/models/contact.rb",
+      "app/views/api/v1/models/_contact.json.jbuilder",
+      "...916000000_add_preferred_language_to_contacts.rb",
+      "db/schema.rb",
+      ".../api/v1/accounts/contacts_controller_spec.rb",
+      "spec/models/contact_spec.rb",
+      ".../definitions/request/contact/create_payload.yml",
+      ".../definitions/request/contact/update_payload.yml",
+      "swagger/definitions/resource/contact.yml",
+      "swagger/definitions/resource/contact_detail.yml",
+      "swagger/definitions/resource/contact_list_item.yml",
+      "swagger/swagger.json",
+      "swagger/tag_groups/application_swagger.json",
+      "swagger/tag_groups/client_swagger.json",
+      "swagger/tag_groups/other_swagger.json",
+      "swagger/tag_groups/platform_swagger.json"
+    ]
+  }
+}
