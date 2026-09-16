@@ -139,3 +139,21 @@ Tokens, turns and wall-clock are independent of price lists, so they become the
 comparable metric. The dollar figure stays as an annotation.
 
 No scoring changed; this is a labelling correction.
+
+### 2026-09-16 — pinned model and effort explicitly (before any measured run)
+
+Both CLIs read model and reasoning effort from machine-local config this repo does
+not contain — `~/.claude/settings.json` and `~/.codex/config.toml`. On this machine
+both happened to be set to medium effort, so the two arms were already at parity by
+accident; a reader cloning the repo would have run at whatever their own machine was
+set to, and neither the runs nor the data would have said so.
+
+The harness now passes `--model` / `--effort` (Claude) and `--model` /
+`-c model_reasoning_effort` (Codex) explicitly, defaulting to the medium effort the
+pilots were actually run at, overridable via `CLAUDE_MODEL` / `CODEX_MODEL` / `EFFORT`.
+Each run records the pair in `agent.model`.
+
+Pinning the model does not change capability: the pilots resolved to
+`claude-opus-5[1m]`, and an explicit `--model claude-opus-5` reports the same
+1M context window and 64K max output, so the suffix is a billing label. The pilots
+therefore remain comparable with the measured runs.

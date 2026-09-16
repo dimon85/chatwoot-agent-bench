@@ -27,18 +27,24 @@ mkdir -p "$OUT"
 PROMPT=$(cat "$BENCH_ROOT/PROMPT.md")
 CLAUDE_MODEL="${CLAUDE_MODEL:-claude-opus-5}"
 CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"
+# Effort is set explicitly for both arms rather than inherited. Both CLIs read it
+# from machine-local config (~/.claude/settings.json, ~/.codex/config.toml) that
+# this repo does not contain, so a reader cloning it would silently run at
+# whatever their own machine is set to.
+EFFORT="${EFFORT:-medium}"
 
 cd "$WT"
 start=$(date +%s)
 case "$AGENT" in
   claude)
-    echo "model: $CLAUDE_MODEL" > "$OUT/agent.model"
-    claude -p "$PROMPT" --model "$CLAUDE_MODEL" --dangerously-skip-permissions \
+    echo "model: $CLAUDE_MODEL effort: $EFFORT" > "$OUT/agent.model"
+    claude -p "$PROMPT" --model "$CLAUDE_MODEL" --effort "$EFFORT" --dangerously-skip-permissions \
       --output-format json > "$OUT/agent.json" 2>"$OUT/agent.err" || true
     ;;
   codex)
-    echo "model: $CODEX_MODEL" > "$OUT/agent.model"
-    codex exec --model "$CODEX_MODEL" --dangerously-bypass-approvals-and-sandbox "$PROMPT" \
+    echo "model: $CODEX_MODEL effort: $EFFORT" > "$OUT/agent.model"
+    codex exec --model "$CODEX_MODEL" -c "model_reasoning_effort=$EFFORT" \
+      --dangerously-bypass-approvals-and-sandbox "$PROMPT" \
       > "$OUT/agent.log" 2>"$OUT/agent.err" || true
     ;;
   *) die "unknown agent: $AGENT" ;;
