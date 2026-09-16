@@ -1,0 +1,596 @@
+diff --git a/app/controllers/api/v1/accounts/contacts_controller.rb b/app/controllers/api/v1/accounts/contacts_controller.rb
+index bc1082583..eb70f85c9 100644
+--- a/app/controllers/api/v1/accounts/contacts_controller.rb
++++ b/app/controllers/api/v1/accounts/contacts_controller.rb
+@@ -171,7 +171,8 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
+   end
+ 
+   def permitted_params
+-    params.permit(:name, :identifier, :email, :phone_number, :avatar, :blocked, :avatar_url, additional_attributes: {}, custom_attributes: {})
++    params.permit(:name, :identifier, :email, :phone_number, :preferred_language, :avatar, :blocked, :avatar_url,
++                  additional_attributes: {}, custom_attributes: {})
+   end
+ 
+   def contact_custom_attributes
+diff --git a/app/models/contact.rb b/app/models/contact.rb
+index a63b164bb..59d08fa02 100644
+--- a/app/models/contact.rb
++++ b/app/models/contact.rb
+@@ -18,6 +18,7 @@
+ #  middle_name           :string           default("")
+ #  name                  :string           default("")
+ #  phone_number          :string
++#  preferred_language    :string
+ #  created_at            :datetime         not null
+ #  updated_at            :datetime         not null
+ #  account_id            :integer          not null
+diff --git a/app/views/api/v1/models/_contact.json.jbuilder b/app/views/api/v1/models/_contact.json.jbuilder
+index a76166a57..dc0ab20b8 100644
+--- a/app/views/api/v1/models/_contact.json.jbuilder
++++ b/app/views/api/v1/models/_contact.json.jbuilder
+@@ -4,6 +4,7 @@ json.email resource.email
+ json.id resource.id
+ json.name resource.name
+ json.phone_number resource.phone_number
++json.preferred_language resource.preferred_language
+ json.blocked resource.blocked
+ json.identifier resource.identifier
+ json.company_id resource.company_id if Current.account&.feature_enabled?('companies')
+diff --git a/db/migrate/20260916000000_add_preferred_language_to_contacts.rb b/db/migrate/20260916000000_add_preferred_language_to_contacts.rb
+new file mode 100644
+index 000000000..3e4a831bc
+--- /dev/null
++++ b/db/migrate/20260916000000_add_preferred_language_to_contacts.rb
+@@ -0,0 +1,5 @@
++class AddPreferredLanguageToContacts < ActiveRecord::Migration[7.1]
++  def change
++    add_column :contacts, :preferred_language, :string
++  end
++end
+diff --git a/db/schema.rb b/db/schema.rb
+index a6711fe01..020f3218c 100644
+--- a/db/schema.rb
++++ b/db/schema.rb
+@@ -10,7 +10,7 @@
+ #
+ # It's strongly recommended that you check this file into your version control system.
+ 
+-ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
++ActiveRecord::Schema[7.1].define(version: 2026_09_16_000000) do
+   # These extensions should be enabled to support this database
+   enable_extension "pg_stat_statements"
+   enable_extension "pg_trgm"
+@@ -802,6 +802,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
+     t.string "country_code", default: ""
+     t.boolean "blocked", default: false, null: false
+     t.bigint "company_id"
++    t.string "preferred_language"
+     t.index "lower((email)::text), account_id", name: "index_contacts_on_lower_email_account_id"
+     t.index ["account_id", "contact_type"], name: "index_contacts_on_account_id_and_contact_type"
+     t.index ["account_id", "email", "phone_number", "identifier"], name: "index_contacts_on_nonempty_fields", where: "(((email)::text <> ''::text) OR ((phone_number)::text <> ''::text) OR ((identifier)::text <> ''::text))"
+diff --git a/spec/controllers/api/v1/accounts/contacts_controller_spec.rb b/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
+index 9468b273c..2df278156 100644
+--- a/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
++++ b/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
+@@ -481,7 +481,7 @@ RSpec.describe 'Contacts API', type: :request do
+   end
+ 
+   describe 'GET /api/v1/accounts/{account.id}/contacts/:id' do
+-    let!(:contact) { create(:contact, account: account) }
++    let!(:contact) { create(:contact, account: account, preferred_language: 'es') }
+ 
+     context 'when it is an unauthenticated user' do
+       it 'returns unauthorized' do
+@@ -502,6 +502,7 @@ RSpec.describe 'Contacts API', type: :request do
+         expect(response).to have_http_status(:success)
+         expect(response).to conform_schema(200)
+         expect(response.body).to include(contact.name)
++        expect(response.parsed_body.dig('payload', 'preferred_language')).to eq('es')
+       end
+     end
+   end
+@@ -547,7 +548,7 @@ RSpec.describe 'Contacts API', type: :request do
+ 
+   describe 'POST /api/v1/accounts/{account.id}/contacts' do
+     let(:custom_attributes) { { test: 'test', test1: 'test1' } }
+-    let(:valid_params) { { name: 'test', custom_attributes: custom_attributes } }
++    let(:valid_params) { { name: 'test', preferred_language: 'fr', custom_attributes: custom_attributes } }
+ 
+     context 'when it is an unauthenticated user' do
+       it 'returns unauthorized' do
+@@ -572,6 +573,8 @@ RSpec.describe 'Contacts API', type: :request do
+         # custom attributes are updated
+         json_response = response.parsed_body
+         expect(json_response['payload']['contact']['custom_attributes']).to eq({ 'test' => 'test', 'test1' => 'test1' })
++        expect(json_response['payload']['contact']['preferred_language']).to eq('fr')
++        expect(Contact.last.preferred_language).to eq('fr')
+       end
+ 
+       it 'does not create the contact' do
+@@ -631,6 +634,17 @@ RSpec.describe 'Contacts API', type: :request do
+         expect(contact.additional_attributes).to eq({ 'attr1' => 'attr1', 'attr2' => 'new attr2', 'attr3' => 'attr3' })
+       end
+ 
++      it 'updates the preferred language' do
++        patch "/api/v1/accounts/#{account.id}/contacts/#{contact.id}",
++              headers: admin.create_new_auth_token,
++              params: { preferred_language: 'de' },
++              as: :json
++
++        expect(response).to have_http_status(:success)
++        expect(contact.reload.preferred_language).to eq('de')
++        expect(response.parsed_body.dig('payload', 'preferred_language')).to eq('de')
++      end
++
+       it 'prevents the update of contact of another account' do
+         other_account = create(:account)
+         other_contact = create(:contact, account: other_account)
+diff --git a/swagger/definitions/request/contact/create_payload.yml b/swagger/definitions/request/contact/create_payload.yml
+index 7f74e501c..4498aeaea 100644
+--- a/swagger/definitions/request/contact/create_payload.yml
++++ b/swagger/definitions/request/contact/create_payload.yml
+@@ -22,6 +22,10 @@ properties:
+     type: string
+     description: phone number of the contact
+     example: '+123456789'
++  preferred_language:
++    type: string
++    description: preferred language of the contact
++    example: en
+   avatar:
+     type: string
+     format: binary
+diff --git a/swagger/definitions/request/contact/update_payload.yml b/swagger/definitions/request/contact/update_payload.yml
+index 99bec3548..c14b500a4 100644
+--- a/swagger/definitions/request/contact/update_payload.yml
++++ b/swagger/definitions/request/contact/update_payload.yml
+@@ -16,6 +16,10 @@ properties:
+     type: string
+     description: phone number of the contact
+     example: '+123456789'
++  preferred_language:
++    type: string
++    description: preferred language of the contact
++    example: en
+   avatar:
+     type: string
+     format: binary
+diff --git a/swagger/definitions/resource/contact.yml b/swagger/definitions/resource/contact.yml
+index 259604f0d..ef95d37e2 100644
+--- a/swagger/definitions/resource/contact.yml
++++ b/swagger/definitions/resource/contact.yml
+@@ -23,6 +23,11 @@ properties:
+         phone_number:
+           type: string
+           description: The phone number of the contact
++        preferred_language:
++          type:
++            - string
++            - 'null'
++          description: The preferred language of the contact
+         blocked:
+           type: boolean
+           description: Whether the contact is blocked
+diff --git a/swagger/definitions/resource/contact_list_item.yml b/swagger/definitions/resource/contact_list_item.yml
+index 1be9c6630..115a80c97 100644
+--- a/swagger/definitions/resource/contact_list_item.yml
++++ b/swagger/definitions/resource/contact_list_item.yml
+@@ -38,6 +38,11 @@ properties:
+       - string
+       - 'null'
+     description: The phone number of the contact
++  preferred_language:
++    type:
++      - string
++      - 'null'
++    description: The preferred language of the contact
+   blocked:
+     type: boolean
+     description: Whether the contact is blocked
+@@ -64,4 +69,4 @@ properties:
+     type: array
+     description: List of inboxes associated with this contact
+     items:
+-      $ref: '#/components/schemas/contact_inbox' 
+\ No newline at end of file
++      $ref: '#/components/schemas/contact_inbox'
+diff --git a/swagger/swagger.json b/swagger/swagger.json
+index e1bc96870..f662dbff0 100644
+--- a/swagger/swagger.json
++++ b/swagger/swagger.json
+@@ -10495,6 +10495,13 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": [
++                    "string",
++                    "null"
++                  ],
++                  "description": "The preferred language of the contact"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -12892,6 +12899,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -12945,6 +12957,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -16186,6 +16203,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The preferred language of the contact"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"
+diff --git a/swagger/tag_groups/application_swagger.json b/swagger/tag_groups/application_swagger.json
+index 0aa95fae4..49b8aab02 100644
+--- a/swagger/tag_groups/application_swagger.json
++++ b/swagger/tag_groups/application_swagger.json
+@@ -9002,6 +9002,13 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": [
++                    "string",
++                    "null"
++                  ],
++                  "description": "The preferred language of the contact"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -10388,8 +10395,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -10448,7 +10458,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -11389,6 +11406,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -11442,6 +11464,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -14683,6 +14710,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The preferred language of the contact"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"
+diff --git a/swagger/tag_groups/client_swagger.json b/swagger/tag_groups/client_swagger.json
+index 4a8835be1..987de4893 100644
+--- a/swagger/tag_groups/client_swagger.json
++++ b/swagger/tag_groups/client_swagger.json
+@@ -1169,6 +1169,13 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": [
++                    "string",
++                    "null"
++                  ],
++                  "description": "The preferred language of the contact"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -2555,8 +2562,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2615,7 +2625,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -3556,6 +3573,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -3609,6 +3631,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -6850,6 +6877,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The preferred language of the contact"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"
+diff --git a/swagger/tag_groups/other_swagger.json b/swagger/tag_groups/other_swagger.json
+index cbe853de0..813b8b6cc 100644
+--- a/swagger/tag_groups/other_swagger.json
++++ b/swagger/tag_groups/other_swagger.json
+@@ -584,6 +584,13 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": [
++                    "string",
++                    "null"
++                  ],
++                  "description": "The preferred language of the contact"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -1970,8 +1977,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2030,7 +2040,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -2971,6 +2988,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -3024,6 +3046,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -6265,6 +6292,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The preferred language of the contact"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"
+diff --git a/swagger/tag_groups/platform_swagger.json b/swagger/tag_groups/platform_swagger.json
+index 56b23b9c7..c4c77fe0d 100644
+--- a/swagger/tag_groups/platform_swagger.json
++++ b/swagger/tag_groups/platform_swagger.json
+@@ -1345,6 +1345,13 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": [
++                    "string",
++                    "null"
++                  ],
++                  "description": "The preferred language of the contact"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -2731,8 +2738,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2791,7 +2801,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -3732,6 +3749,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -3785,6 +3807,11 @@
+             "description": "phone number of the contact",
+             "example": "+123456789"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "preferred language of the contact",
++            "example": "en"
++          },
+           "avatar": {
+             "type": "string",
+             "format": "binary",
+@@ -7026,6 +7053,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The preferred language of the contact"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"

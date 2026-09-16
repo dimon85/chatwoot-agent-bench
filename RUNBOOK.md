@@ -70,6 +70,13 @@ Every clean run has exactly two, both documented in BASELINE.md:
 Anything else is signal. Anything fewer is also signal — an agent may have
 accidentally fixed one.
 
+## If you re-measure a run
+
+measure.sh writes into runs/<id>/, so renaming a bad result directory and measuring
+again leaves the new one without the agent's own artifacts — agent.json, agent.status,
+agent.model — and the effort metrics come back empty. Copy those three files across
+before re-running collect.py.
+
 ## If a run breaks
 
 Keep it. Rename the directory with a suffix saying what went wrong, exactly as

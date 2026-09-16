@@ -1,41 +1,60 @@
 # Pilot runs
 
-Two runs of the same agent (Claude Code) on the same prompt, done before the
-measured set to answer two questions: does the harness reproduce, and what does
-one run cost.
+Runs made before the measured series, to answer whether the harness reproduces and
+what a run costs. They are **not evidence** and must not appear in the analysis —
+not even as corroboration, and especially not if the measured runs agree with them.
 
-They are NOT part of the measured data. They are published because the rubric
-was amended on the strength of what they exposed — see RUBRIC.md § Amendments.
+They are published because the harness and the rubric were both changed on the
+strength of what they exposed.
 
-| | pilot-1 | pilot-2 |
-|---|---|---|
-| rspec | 9453 examples, 2 failures, baseline clean | 9455 examples, 2 failures, baseline clean |
-| vitest | 4582 passed | 4582 passed |
-| rubocop | 0 offenses | 0 offenses |
-| eslint | clean | clean |
-| diff | 14 files, +181/-18 | 17 files, +287/-14 |
-| cost | $1.54 | $1.77 |
-| turns | 35 | 33 |
-| wall | 178s | 158s |
+## The clean four
 
-## What they showed
+| | agent | files | swagger defs | rspec | wall |
+|---|---|---|---|---|---|
+| pilot-1 | Claude Code | 14 | 3 | 9453 ex, baseline clean | 178s |
+| pilot-2 | Claude Code | 17 | 5 | 9455 ex, baseline clean | 158s |
+| pilot-4-codex | Codex | 15 | 4 | 9451 ex, baseline clean | 296s |
+| pilot-5-claude | Claude Code | 16 | 5 | 9453 ex, baseline clean | 155s |
 
-**The harness reproduces.** Both ran end to end without intervention and both
-matched the baseline failure set exactly.
+An earlier Codex run produced 6 files and touched no swagger at all. Its measurement
+was invalidated by a harness defect, so it is not counted above — but the diff itself
+was the agent's, and the spread it implies is the reason the measured series needs
+five runs per arm rather than one.
 
-**Within-agent variance is real.** Same agent, same prompt, 14 files versus 17.
-The core was identical — migration (down to the filename), model annotation,
-controller params, jbuilder, controller spec, three swagger definitions and the
-generated swagger artifacts. pilot-2 additionally found `spec/models/contact_spec.rb`,
-`contact_detail.yml` and `contact_list_item.yml`.
+## What they exposed
 
-That spread inside one agent is the thing to measure the between-agent
-difference against.
+**Three harness defects, all of which would have manufactured a conclusion.**
 
-**Both stayed on the dashboard surface.** Neither touched the public API or widget
-controllers, and neither touched the public swagger definitions — a consistent
-reading of the field as dashboard-owned, not an oversight. `AGENTS.md` tells
-agents to prefer the smallest production-ready change, so this is compliance.
+1. `db:migrate` has ConfigLoader hooked onto it by `lib/tasks/db_enhancements.rake`,
+   so every call writes 113 rows into `installation_configs`. The suite expects that
+   table empty and failed in 359 places across billing, Captain, Cloudflare and
+   Facebook. Codex ran `db:migrate` itself — an entirely normal thing to do after
+   adding a migration — and would have scored F2 in all five of its runs for an
+   artifact.
 
-**Both regenerated swagger rather than hand-editing it.** All four `tag_groups`
-files changed coherently, which only `rake swagger:build` produces.
+2. The same task rewrote `db/schema.rb`, so the recorded diff was no longer the
+   agent's work. The measurement was corrupting what it measured.
+
+3. `db:test:prepare` then aborted with `EnvironmentMismatchError` and the harness
+   swallowed it with `|| true`, measuring on a database that still held the
+   ConfigLoader rows — 430 failures, none of them the agent's. Root cause was the
+   harness's own design: Chatwoot's `database.yml` reads `POSTGRES_DATABASE` for
+   both the development and test environments, so pinning one name per worktree
+   pointed both at the same database.
+
+Every one of these was invisible until a second agent exercised a path the first
+never took. The null run — measuring an untouched worktree — did not catch any of
+them, because nothing had happened in that worktree.
+
+**A rubric gap.** Both Claude pilots edited `swagger/` definitions, a surface the
+original touchpoint map missed entirely. See RUBRIC.md § Amendments.
+
+**Two metrics that are not comparable across arms.** Claude Code reports one
+`num_turns` per assistant message (32-35); Codex reports a single `turn.completed`
+for the whole run. And the two use different tokenizers, so token counts are the
+same order of magnitude but not the same unit.
+
+## What the spread looks like
+
+Within Claude Code alone: 14, 16 and 17 files. Codex: 6 and 15. The ranges overlap,
+and the widest gap in the whole set is between two runs of the same agent.
