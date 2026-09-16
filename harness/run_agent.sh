@@ -3,6 +3,11 @@
 #
 #   ./run_agent.sh <run_id> <agent: claude|codex> [path]
 #
+# The model is pinned, not left to the default. Not because routing drifts within
+# a run — it does not; the helper model spent exactly 1014 tokens in both pilots —
+# but because a default can change between runs. An update landing mid-series
+# would have run 1 and run 5 on different models with nothing in the data to say so.
+#
 # Non-interactive on purpose. A benchmark needs a defined stopping condition,
 # and an interactive agent can end its turn with a question nobody answers.
 # Permissions are bypassed so both arms have identical autonomy: differing
@@ -20,16 +25,20 @@ WT="${3:-$(cat "$BENCH_ROOT/.worktree-$RUN_ID" 2>/dev/null)}"
 OUT="$RESULTS_DIR/$RUN_ID"
 mkdir -p "$OUT"
 PROMPT=$(cat "$BENCH_ROOT/PROMPT.md")
+CLAUDE_MODEL="${CLAUDE_MODEL:-claude-opus-5}"
+CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"
 
 cd "$WT"
 start=$(date +%s)
 case "$AGENT" in
   claude)
-    claude -p "$PROMPT" --dangerously-skip-permissions \
+    echo "model: $CLAUDE_MODEL" > "$OUT/agent.model"
+    claude -p "$PROMPT" --model "$CLAUDE_MODEL" --dangerously-skip-permissions \
       --output-format json > "$OUT/agent.json" 2>"$OUT/agent.err" || true
     ;;
   codex)
-    codex exec --dangerously-bypass-approvals-and-sandbox "$PROMPT" \
+    echo "model: $CODEX_MODEL" > "$OUT/agent.model"
+    codex exec --model "$CODEX_MODEL" --dangerously-bypass-approvals-and-sandbox "$PROMPT" \
       > "$OUT/agent.log" 2>"$OUT/agent.err" || true
     ;;
   *) die "unknown agent: $AGENT" ;;
