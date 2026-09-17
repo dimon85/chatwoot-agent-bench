@@ -9,6 +9,49 @@ trust, and trust is built by claiming less than you can prove.
 
 ---
 
+## Block 1 — Cold open
+**0:00 – 0:45 · ~120 words**
+
+> SCREEN: two numbers, nothing else.
+
+Eleven dollars and one cent. Six point seven cents.
+
+Same task. Same repository, same commit, same prompt. One of these models costs a
+hundred and sixty-five times more than the other to finish the same piece of work.
+
+> SCREEN: the two diffs, side by side, scrolling together.
+
+And the code they wrote was almost identical.
+
+> SCREEN: hold.
+
+That is not the interesting part.
+
+The interesting part is that both of them left the same kind of defect in this
+codebase — and my test suite reported green, my linter reported green, and the feature
+worked when I clicked it.
+
+I ran each model three times. Most of the week went not into measuring the models, but
+into discovering that my measurement was lying to me. Five separate times.
+
+Here is what I found.
+
+> SCREEN: title card.
+
+---
+
+## Production notes for Block 1
+
+- Open on the two numbers with no voice for a beat. They do the work.
+- "And the code they wrote was almost identical" is the turn. Everything after it is
+  the actual video; everything before it is the bait the genre trained people to expect.
+- Do not say "which one won" anywhere in the video. The finding is not a ranking and
+  promising one costs you the last five minutes.
+- Do not claim a type checker. This project has none — only rspec, vitest, eslint and
+  rubocop.
+
+---
+
 ## Block 2 — Why every answer you have seen is measuring noise
 **0:45 – 3:00 · ~340 words · data-independent**
 
