@@ -176,6 +176,85 @@ Nobody requires you to run a second model. That is the part that bothers me.
   the root cause was a design decision would be the exact dishonesty this video is
   about.
 - Final line lands better dry than indignant.
-## Block 5 — Why the cost numbers you read are fake (to write, data-independent)
+## Block 5 — Why the cost numbers you read are fake
+**11:00 – 14:00 · ~470 words · data-independent**
+
+> SCREEN: a typical price-comparison table from a blog post.
+
+Every comparison you read prices models per million tokens. Five dollars here, fifteen
+cents there, look at the ratio.
+
+That number cannot be compared across vendors, and I can show you why in one sentence.
+
+> SCREEN: highlight "per million tokens".
+
+Different vendors tokenise text differently. Anthropic's own documentation says their
+newer tokeniser produces up to thirty-five percent more tokens for the same text than
+their previous one — and that is the same company comparing itself to itself.
+
+So "five dollars per million tokens" and "fifteen cents per million tokens" are prices
+for different quantities of the same thing. Every table built on them is comparing
+units it has not converted.
+
+> SCREEN: the DeepSeek pricing page, peak hours highlighted.
+
+Second problem. One of these providers charges by the clock. Peak hours are twice the
+off-peak rate, and peak is a specific window in UTC on weekdays.
+
+The same task, run at ten in the morning or at two in the afternoon, costs double. Not
+because anything about the work changed.
+
+> SCREEN: harness output next to the provider console.
+
+Third problem, and this is the one that actually caught me.
+
+My tooling reported what each run cost. For the cheap model it said sixteen cents. The
+provider's own billing page said thirty-two. Exactly double — because the tool prices
+everything at the base rate and knows nothing about peak windows.
+
+Fine, I thought. Off by a known factor. Then I checked the other provider.
+
+> SCREEN: two numbers side by side, tokens.
+
+My tooling said two and a half million tokens in. The billing console said six point
+three million. Not the price — the *tokens*. Two and a half times more consumed than
+my tool recorded.
+
+I still do not know why. My best guess is retried requests, which the provider bills
+and the tool does not log. That is a guess, and I am telling you it is a guess.
+
+> SCREEN: the Haiku row in the usage table.
+
+And while I was in there, one more thing. That run was pinned to one specific model.
+The billing shows a second, smaller model on the same run — a couple of thousand
+tokens, probably generating a session title. Small. But it means the thing I pinned was
+not the only thing running.
+
+> SCREEN: back to camera.
+
+So here is the rule I ended up with, and it is the only honest one.
+
+Do not measure cost. Measure tokens, and record what time it was. Then compute the cost
+afterwards, from a rate card you wrote down with the date you read it.
+
+Tokens are a fact about what happened. Price is a fact about a rate card that changes
+by the hour, by the vendor, and by whether your tool bothered to check.
+
+And the number that actually matters to you is not cost per token at all. It is cost
+per finished task — which depends on how much work each model needs to do to finish.
+That turns out to be where it gets interesting.
+
+> SCREEN: cut to Block 6.
+
+---
+
+## Production notes for Block 5
+
+- "I still do not know why... That is a guess, and I am telling you it is a guess."
+  Keep verbatim. Admitting an open question mid-video is worth more than another
+  finding.
+- The Haiku detail is small and must stay small. It is a texture beat, not a scandal.
+- The last two lines are the handoff to the result. Do not answer the question here,
+  even if the answer is known by the time you record.
 ## Block 6 — MEASURED result
 ## Block 7 — MEASURED what it means
