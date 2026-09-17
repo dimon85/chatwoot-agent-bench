@@ -16,6 +16,9 @@ if something here has to change mid-series, the series restarts.
 
 ## Running
 
+The measured series was three runs per arm, not five — see RUBRIC.md § Amendments.
+The commands below show the full ten for reference.
+
 One run at a time, serially:
 
 Credentials come from `~/.chatwoot-bench.env` (chmod 600, outside the repo), sourced

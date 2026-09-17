@@ -101,6 +101,10 @@ or widening one without noticing whose data it exposes. Record which direction.
 
 ---
 
+## Sample size
+
+Three runs per arm, not five. See § Amendments, 2026-09-17.
+
 ## Interpretation gate (decided in advance)
 
 - F4–F7 present in either arm → the finding is about *what agents miss that CI doesn't catch*.
@@ -179,6 +183,25 @@ an untouched worktree. A check that cannot fail would measure nothing.
 
 F3a-c are now machine-decided. F3d, the UI requirement, still needs a human looking at
 the running app.
+
+### 2026-09-17 — the series is three runs per arm, not five (decided mid-series)
+
+The first Opus run consumed 12.9M context tokens against the pilot's 2.5M — five times
+as much for the same prompt on the same model — and the billed multiplier over the
+harness's own figure turned out to be 1.71x. Five runs of that arm would have cost
+around a hundred dollars against a forty-four dollar balance, and would have run out
+partway through, leaving one arm complete and the other truncated.
+
+Stopped at three per arm instead, with both arms equal. An unequal series would have
+been worthless; a smaller equal one is merely weaker.
+
+Recorded here rather than quietly: the decision was made after seeing three runs'
+resource usage but before seeing any diff or any classification, and the runs already
+completed were not re-selected or discarded. What it costs is statistical power. With
+the spread already visible inside arm A — 2.5M to 12.9M tokens, 48 to 117 steps — three
+points support a much weaker claim than five. If the between-arm difference does not
+exceed the within-arm spread, the honest finding is "not distinguishable at this sample
+size", and it must be stated that way rather than as a ranking.
 
 ### 2026-09-16 — added A5b and A5c, extended F5 (before any measured run)
 
