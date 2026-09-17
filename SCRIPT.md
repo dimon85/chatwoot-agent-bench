@@ -337,5 +337,139 @@ That turns out to be where it gets interesting.
 - The Haiku detail is small and must stay small. It is a texture beat, not a scandal.
 - The last two lines are the handoff to the result. Do not answer the question here,
   even if the answer is known by the time you record.
-## Block 6 — MEASURED result
-## Block 7 — MEASURED what it means
+## Block 6 — What six runs actually showed
+**14:00 – 18:00 · ~620 words**
+
+> SCREEN: the Part A table, all six columns.
+
+Six runs. Three per model. Here is the first thing, and it is not what I expected.
+
+> SCREEN: highlight the identical rows.
+
+On the core of the task, the two models are indistinguishable. Both wrote the same
+migration. Both touched one of the four places this codebase accepts contact data — the
+same one. Both updated one of three serializers — the same one. Neither went anywhere
+near the public API or the widget. Both wired the same form in the interface. Both
+wrote two spec files.
+
+And the feature worked in all six. I check that independently, with a script that
+creates a contact through the real API, reads it back, updates it, and confirms the
+value survives. Six out of six.
+
+If I had stopped there, I would have a boring video and a wrong one.
+
+> SCREEN: the swagger file list.
+
+Here is the first thing that is actually wrong. This API's documentation is generated.
+You edit source files, then run a build task that produces the files that are actually
+served.
+
+Three of the six runs edited the sources and did not finish the build. One of them
+edited four documentation files and regenerated nothing at all.
+
+So the change is in the source. The documentation that your users read does not have
+it. Every test passes. Every linter passes. The diff looks complete.
+
+> SCREEN: the rubocop.yml diff.
+
+Second. Adding this field pushes the Contact class to a hundred and seventy-seven
+lines. The linter's limit is a hundred and seventy-five.
+
+Three runs — all three of one model — opened the linter configuration and added their
+own file to the exemption list.
+
+> SCREEN: harness output, "rubocop: 0 offenses".
+
+And my harness reported zero lint violations. Which was true.
+
+I only caught this because I had added a check for it the day before, after seeing it
+once in a pilot. Without that check, four of these six runs would have shown an
+identical clean result, and I would have had no way to tell the difference between a
+run that satisfied the linter and a run that switched it off.
+
+> SCREEN: the failing spec.
+
+Third. One run wrote tests requiring that an invalid language code is rejected. Then it
+did not implement that validation, and shipped with its own tests failing.
+
+It did not break the codebase. It broke its own promise — which is worse in one narrow
+way. The next person reads the spec, sees the behaviour described, and believes it.
+
+> SCREEN: the two split tables.
+
+Now, the difference between the models. There is one, and it is clean: three out of
+three runs of one model added validation for the language code. Zero out of three of
+the other did.
+
+One of them found a gem already in this project's dependencies. Another found
+Chatwoot's own language configuration — the exact list the product uses for interface
+locales. Both added the error message to the right translation file.
+
+That looks decisive. It is not.
+
+> SCREEN: the number 0.10.
+
+Three runs per model. A perfect split at that sample size has a two-sided probability
+of about ten percent. That is a signal worth telling you about. It is not a result I
+can assert.
+
+And there is a second problem with calling it a win. The task never asked for
+validation. This repository's own contributor guide tells you to prefer the smallest
+change that solves the problem and to avoid speculative guards.
+
+So one model did more than it was asked, carefully and idiomatically. Whether that is
+diligence or scope creep is a judgement, and I am telling you it is a judgement rather
+than scoring it as a point.
+
+> SCREEN: cut to Block 7.
+
+---
+
+## Block 7 — What it costs, and what this does not prove
+**18:00 – 20:00 · ~330 words**
+
+> SCREEN: two numbers, billing pages behind them.
+
+Cost per finished task, taken from the providers' billing, not from my tooling.
+
+Eleven dollars and one cent. Six point seven cents.
+
+A hundred and sixty-five times.
+
+> SCREEN: the per-token price table next to it.
+
+Which is bigger than the per-token gap, and that surprised me. Per token, the ratio is
+thirty-three to one on input.
+
+The reason is that the cheap model did not do less work. Context consumed was twenty-
+seven million tokens for the expensive one and thirty million for the cheap one. Almost
+identical. The price difference is the rate, not the volume.
+
+After my pilot runs I predicted the opposite — that the expensive model would be more
+efficient per task and the gap would narrow. That prediction came from a single run. It
+was wrong. I am leaving it in the repository with the timestamp on it.
+
+> SCREEN: the limits, plainly listed.
+
+What this does not prove.
+
+One task, in one codebase. Three runs per model, not five — I ran out of budget, and
+that is in the commit history with the reason. I could not pin reasoning effort,
+because the tooling does not expose it. And the billing shows a small model being
+called that I never asked for.
+
+> SCREEN: back to camera.
+
+The useful thing I can tell you is not which model to buy.
+
+It is that on a well-specified task in a mature codebase, both models produced
+essentially the same code — and both left the same kind of hole: generated artifacts
+not regenerated, a check switched off instead of satisfied, a test asserting something
+that was never built.
+
+None of that is caught by running the test suite. All of it is caught by a human
+reading the diff.
+
+That is the part that did not get cheaper.
+
+> SCREEN: repo link, end.
