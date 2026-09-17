@@ -52,6 +52,44 @@ From the model reference, 2026-09-16. USD per 1M tokens:
 Cache reads bill at roughly 0.1x input, cache writes at roughly 1.25x. No time-of-day
 variation.
 
+## Measured: the harness's own cost figures are wrong
+
+Checked against both provider consoles on 2026-09-17, after two DeepSeek pilots and
+one Opus pilot.
+
+**DeepSeek — tokens right, cost exactly 2x low.**
+
+| | opencode | console |
+|---|---|---|
+| tokens | ~25.5M | 25,641,282 |
+| cost | $0.161 | $0.32 |
+
+The pilots ran 07:09-07:28 UTC, inside the 06:00-10:00 weekday peak window, and
+off-peak is exactly half of peak. opencode prices at the base rate regardless of the
+clock, so it was wrong by exactly the peak multiplier. This is why the harness records
+tokens and `run_window_utc` and derives cost here instead.
+
+**Anthropic — the tokens themselves are 2.5-3x low.**
+
+| | opencode | console |
+|---|---|---|
+| tokens in | 2,582,766 | 6,361,037 |
+| tokens out | 15,686 | 47,191 |
+
+Not a pricing question: more was actually consumed than opencode recorded. Most likely
+retried requests, which the provider bills and the harness does not log — but that is
+a guess, not a finding. Billed spend for one Opus pilot plus a smoke test was $5.68.
+
+**Rule, now with a case behind it rather than only a principle: take both tokens and
+cost from the provider consoles.** opencode's figures are right on DeepSeek's tokens,
+wrong on its money, and wrong on both for Anthropic. Record them in metrics.json as a
+cross-check, never as the result.
+
+**Unpinned model.** The Anthropic console also shows 2,476 Haiku 4.5 tokens on a run
+pinned to `claude-opus-5` — opencode calls a small model of its own accord, probably
+to title the session. Tiny, but it means model routing is not fully pinned on this
+harness, and the writeup should say so.
+
 ## Known limitation: reasoning effort is not pinned
 
 Every other setting in this benchmark is pinned explicitly — model, autonomy, spec
