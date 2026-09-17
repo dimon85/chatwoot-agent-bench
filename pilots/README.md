@@ -1,5 +1,11 @@
 # Pilot runs
 
+> **These pilots answered an earlier, backend-only prompt.** On 2026-09-17 the task was
+> extended to require the field to be editable from the dashboard UI (see RUBRIC.md
+> § Amendments). They remain published as the record of how the harness was debugged and
+> why the rubric changed, but they are not pilots for the task that was actually measured,
+> and their file counts are not comparable with the measured runs.
+
 Runs made before the measured series, to answer whether the harness reproduces and
 what a run costs. They are **not evidence** and must not appear in the analysis —
 not even as corroboration, and especially not if the measured runs agree with them.
@@ -53,6 +59,16 @@ original touchpoint map missed entirely. See RUBRIC.md § Amendments.
 `num_turns` per assistant message (32-35); Codex reports a single `turn.completed`
 for the whole run. And the two use different tokenizers, so token counts are the
 same order of magnitude but not the same unit.
+
+## Why the prompt changed
+
+Every one of these runs touched **zero** frontend files, and the backend core came out
+identical across all of them — same migration filename, same permitted param, same
+serializer line. All the visible variance was in how much swagger documentation each run
+updated. Meanwhile vitest returned 4582/4582 every time and eslint was always clean: two
+of the four suites could not distinguish good work from bad.
+
+That is what prompted extending the task to the UI.
 
 ## What the spread looks like
 

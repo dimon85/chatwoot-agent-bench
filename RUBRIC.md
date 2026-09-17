@@ -23,7 +23,8 @@ compliance rather than negligence. Breadth is reported, not graded.
 | A5b | Swagger contact definitions touched | of 5 dashboard (`resource/contact`, `resource/contact_detail`, `resource/contact_list_item`, `request/contact/create_payload`, `request/contact/update_payload`) and of 3 public (`resource/public/contact`, `resource/public/contact_record`, `request/public/contact/create_update_payload`) |
 | A5c | Generated swagger artifacts | `swagger.json` and `tag_groups/*.json` are built by `rake swagger:build`. Record: regenerated / hand-edited / untouched |
 | A6 | Filter/automation surfaces touched | `custom_attribute_definition.rb:28`, `automation_rule.rb:50`, frontend filter constants |
-| A7 | Frontend touched | 0/1, which files |
+| A7 | Frontend surface touched | Which contact form: `routes/dashboard/conversation/contact/ContactForm.vue` (legacy) or `components-next/Contacts/ContactsForm/ContactsForm.vue` (current), or both, or neither |
+| A7b | Frontend supporting files | `i18n/locale/en/contact.json`, story fixtures, vitest specs — count each |
 | A8 | Spec files added/modified | count |
 | A9 | Validation added | none / presence / inclusion / enum — record which |
 | A10 | Diff size | files changed, insertions, deletions |
@@ -68,10 +69,11 @@ Hand-editing a generated artifact counts here: `swagger.json` and
 `rake swagger:build`, so editing them directly produces a diff that the next
 build silently reverts.
 
-Against `AGENTS.md`: bare strings instead of i18n, custom/scoped CSS instead of Tailwind,
-nested `module`/`class` style, Options API instead of `<script setup>`, missing
-`en.yml`/`en.json` entry, specs with helper methods instead of `let`, non-English locale
-files edited.
+Against `AGENTS.md`, and now actually reachable because the task includes UI:
+bare strings in templates instead of i18n, custom or scoped CSS instead of Tailwind
+utilities, Options API instead of `<script setup>`, direction-unaware padding/margin
+instead of the logical `ms`/`me`/`start`/`end` utilities, a non-English locale file
+edited, nested `module`/`class` style, specs with helper methods instead of `let`.
 
 ### F6 — latent data or migration hazard
 Irreversible migration, missing index where the codebase indexes comparable columns,
@@ -103,6 +105,32 @@ Whichever lands, it gets published. The gate is fixed here so the result cannot 
 
 Changes to this rubric are listed here with their reason. Nothing may be amended
 after the first measured run.
+
+### 2026-09-17 — the task now includes the dashboard UI (before any measured run)
+
+The original prompt asked only that the field persist, round-trip through the API and
+come back in API responses. Every pilot therefore touched zero frontend files, and the
+backend work came out *identical* across all five runs — the same migration down to its
+filename, the same permitted param, the same serializer line. The only variance was how
+much swagger documentation each run updated.
+
+That makes two of the four suites dead weight: vitest returned 4582/4582 in every run
+and eslint was always clean, so neither could distinguish good work from bad.
+
+The prompt now also requires the field to be editable from the dashboard UI. That
+activates vitest and eslint, and it reaches a set of `AGENTS.md` rules that are
+objectively checkable — Tailwind only, no scoped CSS, `<script setup>`, no bare strings
+in templates. It also forces a real judgement the backend task never did: Chatwoot has
+two contact forms, a legacy one and a `components-next` one, and picking between them
+is a decision rather than a lookup.
+
+Cost of the change, stated plainly: the four existing pilots answered a different
+prompt and are no longer pilots for this task. A bigger task also means more variance,
+so five runs per arm will support a weaker conclusion than they would have on the
+backend-only version.
+
+Part A gains A7/A7b to count the frontend surface. F5 is unchanged in meaning but is
+now reachable.
 
 ### 2026-09-16 — added A5b and A5c, extended F5 (before any measured run)
 

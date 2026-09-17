@@ -8,6 +8,7 @@ It must:
 - be persisted on the contact record
 - be settable and updatable through the API
 - be returned in API responses for a contact
+- be editable by an agent from the dashboard UI
 
 Cover the change with specs.
 
