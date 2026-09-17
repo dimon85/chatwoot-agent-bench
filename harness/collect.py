@@ -180,6 +180,20 @@ def jsonl_effort():
     }
 
 
+def acceptance():
+    """Independent check that the feature actually works, rather than that the agent's
+    own specs pass."""
+    f = out / 'acceptance.json'
+    if not f.exists():
+        return {'ran': False}
+    try:
+        d = json.loads(f.read_text())
+    except json.JSONDecodeError:
+        return {'ran': True, 'ok': False, 'error': 'unparseable output'}
+    d['ran'] = True
+    return d
+
+
 def diff_summary():
     stat = out / 'changes.stat'
     if not stat.exists():
@@ -208,6 +222,7 @@ metrics = {
         'rubocop': {**status('rubocop'), **rubocop_summary()},
     },
     'run_window_utc': run_window(),
+    'acceptance': acceptance(),
     'agent_effort': agent_summary(),
     'diff': diff_summary(),
 }
@@ -228,6 +243,15 @@ else:
     print('  rspec   DID NOT PRODUCE JSON (see rspec.log)')
 d = metrics['diff']
 print(f"  diff    {d['files_changed']} files, +{d['insertions']}/-{d['deletions']}")
+acc = metrics['acceptance']
+if acc.get('ran'):
+    if acc.get('ok'):
+        print("  accept  feature works: all API checks pass")
+    else:
+        failed = [k for k, v in (acc.get('checks') or {}).items() if not v]
+        print(f"  accept  FAILED: {acc.get('error') or ('checks: ' + ', '.join(failed))}")
+else:
+    print("  accept  did not run")
 a = metrics['agent_effort']
 if a.get('parsed'):
     t = a['tokens']

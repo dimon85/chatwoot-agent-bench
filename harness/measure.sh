@@ -83,6 +83,19 @@ run_step vitest pnpm test
 run_step eslint pnpm eslint
 run_step rubocop bundle exec rubocop --format json --out "$OUT/rubocop.json"
 
+# Acceptance runs last so it cannot disturb the suites. The agent writes its own
+# specs, so the suite alone cannot say whether the feature works — this drives the
+# real Rack stack and checks the prompt's three API requirements independently.
+# The script lives in the harness, never in the worktree, so it stays out of the diff.
+bundle exec rails runner "$HARNESS_DIR/acceptance.rb" > "$OUT/acceptance.json" 2>"$OUT/acceptance.err" || true
+python3 - "$OUT/acceptance.json" <<'PYEOF'
+import json, sys, pathlib
+p = pathlib.Path(sys.argv[1])
+raw = p.read_text()
+start = raw.find('{')
+p.write_text(raw[start:] if start >= 0 else '{"ok": false, "error": "no JSON emitted"}')
+PYEOF
+
 # A measurement must not alter what it measures. An earlier version ran
 # db:migrate, which rewrote db/schema.rb and silently changed the artifact.
 git add -A
