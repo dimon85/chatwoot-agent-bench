@@ -70,7 +70,88 @@ it is the most useful thing in this video — more useful than which model won.
 
 ---
 
-## Block 3 — MEASURED SETUP (to write)
+## Block 3 — The setup
+**3:00 – 6:00 · ~480 words · data-independent**
+
+> SCREEN: the Chatwoot repo, file tree scrolling.
+
+The repository is Chatwoot. Open source, in production at real companies, about nine
+and a half thousand backend tests. Not a toy, not a benchmark suite written to be
+solved.
+
+> SCREEN: the prompt, full screen, short enough to read.
+
+The task is one paragraph. A contact needs a field recording which language they prefer
+to be contacted in. It has to be stored, settable through the API, returned in API
+responses, editable in the dashboard, and covered by tests.
+
+That is deliberately small. What makes it useful is where it does *not* say anything.
+
+> SCREEN: highlight the four API entry points and the two contact forms.
+
+Because in this codebase, contact data is accepted in four different places. It is
+serialised in three. The API contract is documented in eight more files. And there are
+two contact forms in the interface — an older one and a newer one that is replacing it.
+
+The prompt does not mention any of that. Finding it is the task.
+
+> SCREEN: the rubric file, commit date visible.
+
+Before I ran anything, I wrote down how I would score the results, and committed it.
+Publicly, with a timestamp. Two parts: things you count, and things you judge.
+
+The counting part is deliberately not scored. How many of the four entry points did a
+run touch? How many serializers? I record the number. I do not call a low number a
+failure — because the repository's own contributor guide tells agents to prefer the
+smallest change that solves the problem. A narrow diff might be obedience, not
+laziness.
+
+> SCREEN: the interpretation gate in the rubric.
+
+And I wrote down, in advance, which result leads to which conclusion. Including the
+boring one: if the models land inside each other's spread, the video is about that.
+That decision is in the commit history, dated before any data existed, specifically so
+the data could not pick its own story.
+
+> SCREEN: three baseline runs, identical failure sets.
+
+Then the baseline. I ran the untouched test suite three times before any model saw the
+repository. Nine thousand four hundred and fifty tests, exactly two failures every
+time, identical sets, identical skips.
+
+Those two failures are real and they are documented. One needs a search engine I am not
+running. The other passes on its own and fails inside the full suite — an ordering
+problem that has nothing to do with me. I did not fix either, because fixing them would
+mean I was no longer measuring the upstream codebase.
+
+Two failures is the pass mark. Anything else is signal.
+
+> SCREEN: the harness config, model and settings pinned.
+
+One thing changes between the two arms: the model. Same tooling, same prompt, same
+commit, same autonomy settings, same test order, each run in its own isolated database.
+
+Two things I could not pin, and I want them on the record. The tooling gives me no way
+to set reasoning effort, so both models run at whatever their defaults are. And the
+billing shows the tooling occasionally calls a small model of its own, which I did not
+ask for and cannot turn off.
+
+Everything else is fixed.
+
+> SCREEN: cut to Block 4.
+
+---
+
+## Production notes for Block 3
+
+- The "four entry points, three serializers, eight doc files, two forms" beat is what
+  makes the task credible as real work. Spend the screen time there.
+- "A narrow diff might be obedience, not laziness" — this is the line that separates
+  this video from the genre. Do not cut it for time.
+- Stating the two unpinnable variables here, unprompted, buys more credibility than
+  any amount of rigour claimed later.
+- Do not explain the two baseline failures in detail. Name them, move on; the detail
+  lives in the repo.
 ## Block 4 — How the measurement nearly lied
 **6:00 – 11:00 · ~760 words · data-independent**
 
