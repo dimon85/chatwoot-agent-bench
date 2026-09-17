@@ -4,6 +4,12 @@ Written before the measured series finished, so the narrative spine is on record
 a date and cannot have been fitted to the result. Blocks marked MEASURED are left
 unwritten until the ten runs are classified.
 
+**Title: "The $25 model and the $0.15 model wrote the same code"**
+
+Chosen after the data, not before. It survives the finding because it is literally what
+the six runs showed — the core diffs were indistinguishable — and it forecloses the
+argument the comment section would otherwise have about which one "won".
+
 Target: ~20 minutes, English. Register: understate everything. The currency here is
 trust, and trust is built by claiming less than you can prove.
 
