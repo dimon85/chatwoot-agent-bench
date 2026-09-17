@@ -52,6 +52,23 @@ From the model reference, 2026-09-16. USD per 1M tokens:
 Cache reads bill at roughly 0.1x input, cache writes at roughly 1.25x. No time-of-day
 variation.
 
+## Known limitation: reasoning effort is not pinned
+
+Every other setting in this benchmark is pinned explicitly — model, autonomy, spec
+order, database, `.env`. Reasoning effort is not, because opencode exposes no way to
+set it: there is no flag on `opencode run`, and nothing in the installed package
+matches an effort, reasoning-effort or thinking-budget setting.
+
+Both arms therefore run at whatever opencode's defaults are for their provider. Since
+both arms use the same harness, this is not a difference *between* the arms in the way
+a mismatched setting would be — but it is not a guarantee of parity either, because
+the two providers interpret their own defaults independently.
+
+State this in the writeup rather than implying every variable was controlled. It was
+controllable on Claude Code (`--effort`) and on Codex (`-c model_reasoning_effort`);
+it is not controllable here, and that is the price of the BYOK harness that makes the
+one-variable design possible in the first place.
+
 ## Why cost per token is not the comparison
 
 The two vendors use different tokenizers — Anthropic's own guidance puts the Claude

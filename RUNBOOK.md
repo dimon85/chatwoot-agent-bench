@@ -18,7 +18,19 @@ if something here has to change mid-series, the series restarts.
 
 One run at a time, serially:
 
+Credentials come from `~/.chatwoot-bench.env` (chmod 600, outside the repo), sourced
+automatically by the harness. Keys are never written into the repo or into
+opencode's auth.json.
+
     cd ~/chatwoot-agent-bench/harness
+    OPENCODE_MODEL=anthropic/claude-opus-5 ./run_one.sh a1 opencode
+    OPENCODE_MODEL=deepseek/deepseek-flash  ./run_one.sh b1 opencode
+
+Pin `claude-opus-5`, never `claude-opus-5-fast` — same model, double the rate, no
+benefit to the measurement.
+
+Legacy form, kept for reference:
+
     ./run_one.sh a1 claude
     ./run_one.sh a2 claude
     ./run_one.sh a3 claude

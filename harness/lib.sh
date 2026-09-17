@@ -15,7 +15,16 @@ KNOWN_FAILURES=(
   "./spec/enterprise/services/voice/call_transcription_service_spec.rb:77"
 )
 
+# Provider credentials live outside the repo, in a file the harness never writes and
+# git never sees. Keeping the key out of ~/.local/share/opencode/auth.json as well
+# means it exists in exactly one place the user controls.
+load_credentials() {
+  [ -r "$HOME/.chatwoot-bench.env" ] && . "$HOME/.chatwoot-bench.env"
+  return 0
+}
+
 setup_toolchain() {
+  load_credentials
   eval "$(rbenv init - zsh)"
   export PATH="/opt/homebrew/opt/postgresql@14/bin:$PATH"
   export NVM_DIR="$HOME/.nvm"
