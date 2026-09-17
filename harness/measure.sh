@@ -33,6 +33,17 @@ git diff --cached --stat "$BASE_TAG" > "$OUT/changes.stat"
 git reset -q
 before_hash=$(shasum "$OUT/changes.patch" | cut -d' ' -f1)
 
+# Did the agent edit the instrument rather than the code? A run that adds its own
+# file to .rubocop.yml's exclusion list scores zero offences while having silenced
+# the check — the lint and suite results for such a run mean nothing until a human
+# reads the change. Detect it, do not judge it here.
+INSTRUMENTS='^\+\+\+ b/(\.rubocop\.yml|\.eslintrc\.js|\.rspec|\.prettierrc|package\.json|vitest\.config\..*|spec/spec_helper\.rb|spec/rails_helper\.rb|\.github/|\.circleci/)'
+if grep -qE "$INSTRUMENTS" "$OUT/changes.patch"; then
+  { echo "Run modified files that the measurement itself depends on:"
+    grep -E "$INSTRUMENTS" "$OUT/changes.patch" | sed 's|^+++ b/|  |'
+  } | tee "$OUT/INSTRUMENT_MODIFIED"
+fi
+
 # Load the agent's schema.rb into a reset test database.
 #
 # NOT db:migrate: lib/tasks/db_enhancements.rake hooks ConfigLoader onto that
