@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Launch one agent against PROMPT.md in a provisioned worktree.
 #
-#   ./run_agent.sh <run_id> <agent: claude|codex> [path]
+#   ./run_agent.sh <run_id> <agent: claude|codex|opencode> [path]
 #
 # The model is pinned, not left to the default. Not because routing drifts within
 # a run — it does not; the helper model spent exactly 1014 tokens in both pilots —
@@ -32,6 +32,10 @@ CODEX_MODEL="${CODEX_MODEL:-gpt-5.6-sol}"
 # this repo does not contain, so a reader cloning it would silently run at
 # whatever their own machine is set to.
 EFFORT="${EFFORT:-medium}"
+# opencode is the BYOK harness: same wrapper, provider swapped. Model is given as
+# provider/model and pinned to the current name — deepseek-v4-flash is a retired
+# alias now served by a different model and would silently measure something else.
+OPENCODE_MODEL="${OPENCODE_MODEL:-deepseek/deepseek-flash}"
 
 cd "$WT"
 start=$(date +%s)
@@ -53,6 +57,16 @@ case "$AGENT" in
     # reads it by default and would block a detached run.
     codex exec --model "$CODEX_MODEL" -c "model_reasoning_effort=$EFFORT" \
       --json --dangerously-bypass-approvals-and-sandbox "$PROMPT" \
+      < /dev/null > "$OUT/agent.jsonl" 2>"$OUT/agent.err" || true
+    ;;
+  opencode)
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" --no-use
+    nvm use 24.13.0 >/dev/null 2>&1
+    echo "model: $OPENCODE_MODEL" > "$OUT/agent.model"
+    # No autonomy flag needed: opencode run executes tools without prompting.
+    # stdin closed so a detached run cannot block on it.
+    opencode run -m "$OPENCODE_MODEL" --format json --dir "$WT" "$PROMPT" \
       < /dev/null > "$OUT/agent.jsonl" 2>"$OUT/agent.err" || true
     ;;
   *) die "unknown agent: $AGENT" ;;

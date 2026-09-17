@@ -75,7 +75,7 @@ def agent_summary():
     costBasis "list", i.e. usage priced at published API rates, which is not what
     a subscription run costs anyone."""
     if (out / 'agent.jsonl').exists():
-        return codex_effort()
+        return jsonl_effort()
     f = out / 'agent.json'
     if not f.exists():
         return {'parsed': False}
@@ -108,8 +108,44 @@ def agent_summary():
     }
 
 
-def codex_effort():
-    """Codex emits JSONL events; usage lands on turn.completed."""
+def opencode_effort(events):
+    """opencode reports tokens and its own cost figure per step_finish. The cost is
+    recorded as a cross-check only — cost is derived in the analysis from the rate
+    card, because rates vary by time of day and by provider."""
+    steps = [e for e in events if e.get('type') == 'step_finish']
+    tot = {'input': 0, 'output': 0, 'cache_read': 0, 'cache_write': 0, 'reasoning': 0}
+    reported_cost = 0.0
+    for st in steps:
+        part = st.get('part') or {}
+        t = part.get('tokens') or {}
+        cache = t.get('cache') or {}
+        tot['input'] += t.get('input', 0)
+        tot['output'] += t.get('output', 0)
+        tot['reasoning'] += t.get('reasoning', 0)
+        tot['cache_read'] += cache.get('read', 0)
+        tot['cache_write'] += cache.get('write', 0)
+        reported_cost += part.get('cost', 0) or 0
+    status = out / 'agent.status'
+    wall = int(status.read_text().split()[1]) if status.exists() else None
+    return {
+        'parsed': True,
+        'steps': len(steps),
+        'tool_calls': len([e for e in events if e.get('type') == 'tool_use']),
+        'wall_s': wall,
+        'is_error': any(e.get('type') == 'error' for e in events),
+        'tokens': tot,
+        'per_model': {},
+        'harness_reported_cost_usd': round(reported_cost, 6),
+        'list_price_equivalent_usd': None,
+        'note': 'harness_reported_cost_usd is opencode\'s own figure, kept as a '
+                'cross-check. Derive cost in the analysis from the rate card and '
+                'run_window_utc — DeepSeek prices by time of day.',
+    }
+
+
+def jsonl_effort():
+    """Both Codex and opencode write agent.jsonl, in different shapes. Dispatch on
+    the event names rather than on which agent we think ran."""
     events = []
     for line in (out / 'agent.jsonl').read_text().splitlines():
         line = line.strip()
@@ -118,6 +154,8 @@ def codex_effort():
                 events.append(json.loads(line))
             except json.JSONDecodeError:
                 pass
+    if any(e.get('type') == 'step_finish' for e in events):
+        return opencode_effort(events)
     turns = [e for e in events if e.get('type') == 'turn.completed']
     tot = {'input': 0, 'output': 0, 'cache_read': 0, 'cache_write': 0, 'reasoning': 0}
     for t in turns:
@@ -193,5 +231,8 @@ print(f"  diff    {d['files_changed']} files, +{d['insertions']}/-{d['deletions'
 a = metrics['agent_effort']
 if a.get('parsed'):
     t = a['tokens']
-    print(f"  agent   {a['turns']} turns, {a['wall_s']}s, "
+    # Claude counts turns, Codex counts one turn per run, opencode counts steps.
+    # They are not the same unit and are never compared across arms.
+    unit = ('turns', a['turns']) if 'turns' in a else ('steps', a.get('steps'))
+    print(f"  agent   {unit[1]} {unit[0]}, {a['wall_s']}s, "
           f"out={t['output']} cache_read={t['cache_read']}")
