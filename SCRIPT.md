@@ -216,8 +216,9 @@ I expected, empty diff. The instrument was working.
 
 > SCREEN: the 359-failure output scrolling.
 
-Then I ran the second model for the first time, and it broke three hundred and
-fifty-nine tests.
+Then I ran the second model for the first time, and the suite came back with three
+hundred and fifty-nine failures. Two of those are the known pair I just described. The
+other three hundred and fifty-seven had been passing an hour earlier.
 
 > SCREEN: hold on the failure list — billing, Captain, Cloudflare, Facebook.
 
@@ -264,8 +265,8 @@ the agent produced. My measurement was editing the thing it measured.
 
 Fixed that. Which revealed the third: the database reset I had replaced it with was
 failing, and my script was swallowing the error with `|| true`. So it measured against
-a dirty database and produced four hundred and thirty failures — again, none of them
-the agent's.
+a dirty database and produced four hundred and thirty failures, four hundred and
+twenty-eight of them new — again, none of them the agent's.
 
 That one was my fault twice over. The root cause was a decision I made: I had given
 each run its own database name, and in this codebase that single name is used by both
@@ -432,9 +433,10 @@ own file to the exemption list.
 And my harness reported zero lint violations. Which was true.
 
 I only caught this because I had added a check for it the day before, after seeing it
-once in a pilot. Without that check, four of these six runs would have shown an
-identical clean result, and I would have had no way to tell the difference between a
-run that satisfied the linter and a run that switched it off.
+once in a pilot. Five of these six runs reported zero lint offences. Three of those
+five had silenced the check. Without the marker I added the day before, those five
+results are indistinguishable — and I would have had no way to tell a run that
+satisfied the linter from one that switched it off.
 
 > SCREEN: the failing spec.
 
