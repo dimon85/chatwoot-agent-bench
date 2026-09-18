@@ -511,52 +511,67 @@ than scoring it as a point.
 
 Cost per finished task, taken from the providers' billing, not from my tooling.
 
-Eleven dollars and one cent. Six point seven cents.
+Eleven dollars and one cent. Six point seven cents. About a hundred and sixty-four times.
 
-About a hundred and sixty-four times.
+> SCREEN: the two balance deltas.
+
+One note on where those come from, because it matters. Both consoles report by the day,
+and my day contained pilot runs as well as the measured ones. So these are balance
+differences bracketing the six runs, not console daily totals — and they reconcile: five
+sixty-eight for the pilots plus thirty-three oh four for the series is thirty-eight
+seventy-two, which is exactly what the console billed me for the day.
+
+Compare the daily totals instead and you get seventy-three to one, because that day held
+one pilot on the expensive side and two on the cheap one. Different amounts of work. The
+number I trust is the one where both sides ran the same three tasks.
 
 > SCREEN: the per-token price table.
 
 The headline prices say thirty-three to one on input. The billing says a hundred and
 sixty-four. The table on every comparison page does not describe what I paid.
 
-> SCREEN: both rate cards, the cached-input lines highlighted.
+> SCREEN: the provider's caching page.
 
-Almost nothing in an agent run is new text. It is the same repository, read again and
-again — and I can put a number on that, from one run where the usage page gave me both
-the tokens and the bill.
+Here is why, and this time I can show you rather than argue it. This provider publishes
+a breakdown of what your input actually was.
 
-Six point four million input tokens. Four dollars and fifty cents of input charges.
-That is seventy-one cents per million, on a model whose list price for fresh input is
-five dollars. For the average to land that low, the overwhelming majority of that input
-has to be billed at the cached rate rather than the fresh one.
+Read ratio: a hundred percent. Write amortisation: thirty-six times — meaning every
+token written into the cache was read back out of it thirty-six times on average.
 
-Both providers discount cached input. They discount it very differently.
+> SCREEN: the composition bar.
 
-Fifty cents per million on the expensive one. Three tenths of a cent on the cheap one.
-A hundred and sixty-seven to one, from the two published rate cards, against a headline
-ratio of thirty-three.
+Work that through and the input splits like this. Ninety-seven percent cache reads. Under
+three percent written to cache. Uncached, fresh text: effectively zero.
 
-Every run in this series was off-peak, so that is a single number and not a range —
-which matters, because on the cheap provider the peak rate is double, and a series that
-straddled the boundary would not have one ratio at all.
+That is not a figure of speech. In an agent run there is almost no new text at all. It is
+the same repository, read again and again.
+
+> SCREEN: the two cache rates side by side.
+
+And cached input is where the two providers differ most. Fifty cents per million on the
+expensive one, three tenths of a cent on the cheap one. A hundred and sixty-seven to one,
+against a headline ratio of thirty-three.
+
+Every run in this series was off-peak, so that is a single number and not a range — on
+the cheap provider the peak rate is double, and a series straddling that boundary would
+not have one ratio at all.
+
+> SCREEN: the write line highlighted, small.
+
+One detail worth its own second. Writing to the cache costs more than fresh text — a
+premium for the privilege of reading it cheaply later. Under three percent of my input
+volume was writes. It was twenty-six percent of my input bill.
+
+A sliver on the graph you cannot see, and a quarter of the money.
 
 > SCREEN: back to camera.
 
-What I cannot give you is the exact split.
+What I could not do is the same breakdown on the other side. The cheap provider's console
+gives totals and a cost chart; it does not publish a cache composition. So I can show you
+precisely where the expensive money went, and only infer the shape of the cheap one.
 
-Cached input is billed in two directions — what you write into the cache costs more than
-fresh text, what you read back costs a tenth of it. One average rate cannot separate
-those two, and the usage page does not break input down by type; it gives totals in and
-totals out. The only thing that separates them is my own tooling, which I spent three
-minutes earlier telling you under-reports this provider by roughly a factor of two.
-
-So: the ratio is measured and I trust it. The direction is settled — the input is
-overwhelmingly cache, or the average could not be where it is. What I cannot hand you is
-the precise share of writes against reads.
-
-Saying it fits and calling that proof would have been the easiest paragraph in this
-script to write.
+Which is its own small lesson: the two providers do not give you the same instruments, so
+"measure it yourself" is easier advice to give than to follow.
 
 > SCREEN: the two harness rows.
 
