@@ -63,59 +63,52 @@ Here is what I found.
 ---
 
 ## Block 2 — Why one run tells you nothing
-**0:45 – 3:00 · ~350 words · rewritten after the results**
+**0:45 – 2:45 · ~290 words**
 
 > SCREEN: a typical "I tested two models" post.
 
 There is a genre that goes like this. Take two models, give each one a task, look at the
 output, tell people which is better.
 
-I want to show you why one run cannot answer that question — and it is not the reason
-you would guess.
+One run cannot answer that — and not for the reason you would guess.
 
-> SCREEN: six diff summaries in a row, file counts visible.
+> SCREEN: six diff summaries in a row.
 
-I ran the same task six times. Three per model. And the code came out remarkably
-consistent. Same migration. Same entry point out of the four this codebase has. Same
-serializer out of three. Same component in the interface. Every run produced a working
-feature.
+I ran the same task six times. Three per model. The code came out remarkably consistent:
+same migration, same entry point out of the four this codebase has, same serializer out
+of three, same component in the interface. Every run produced a working feature.
 
-If you ran this once, you would conclude the models are interchangeable. That is roughly
-true of the code.
+Run this once and you would conclude the models are interchangeable. About the code,
+that is roughly true.
 
-> SCREEN: the defect table — three columns, six rows.
+> SCREEN: one file — the generated API docs — with three runs marked.
 
-It is not true of the defects.
+Here is one thing that was not consistent.
 
-Three of those six runs edited the API documentation and never rebuilt it, so the docs
-that actually get served do not have the change. Three of six ran into a linter limit
-and switched the linter off for their own file. One shipped tests that assert a
-validation it never wrote — failing, in its own commit.
+This project's API documentation is generated. You edit source files, then run a build
+step that produces what actually gets served.
 
-Every one of those runs passed the test suite. Five of the six reported zero lint
-problems.
+Three of the six runs edited the sources and never finished the build. One from the
+expensive model. Two from the cheap one. Every one of those runs passed the full test
+suite, because no test looks at generated documentation.
 
-> SCREEN: highlight a single row.
+> SCREEN: hold on the split — 1 of 3, 2 of 3.
 
-Now pick one run at random and write a post about it. Depending on which one you picked,
-you would have concluded that this model documents properly, or that it does not. That
-it respects the linter, or that it disables it. That it ships working tests, or broken
-ones.
+So it is not that one model documents properly and the other does not. Both did it
+sometimes. Whether your project ends up with stale API docs depends on which run you
+happened to get.
 
-Same model. Same prompt. Same commit.
+Pick one run, write a post about it, and you would be describing that run. Not the
+model.
 
 > SCREEN: the benchmark repo, commit history.
 
 That is why this took a week. A rubric committed before the first run so I could not
-move the goalposts. Every run published — prompts, diffs, logs, failures.
+move the goalposts afterwards. Every run published.
 
-And most of that week did not go into measuring the models. It went into discovering
-that my measurement was lying to me. Five separate times.
-
-> SCREEN: brief flash of the fix commits, unreadable, texture only.
-
-One of those bugs nearly made me publish a confident, well-evidenced, completely false
-claim. That is the most useful thing in this video.
+And most of the week did not go into measuring the models. It went into finding out that
+my measurement was lying to me. Five separate times — and one of those nearly made me
+publish a confident, well-evidenced, completely false claim.
 
 > SCREEN: cut to Block 3.
 
@@ -123,20 +116,17 @@ claim. That is the most useful thing in this video.
 
 ## Production notes for Block 2
 
-- The turn is "It is not true of the defects." Everything before it sets up the
-  expectation that the models are interchangeable; everything after shows the variance
-  is real but lives somewhere nobody photographs.
-- The defect table is the block. Build it as one graphic, six rows, three columns —
-  docs regenerated, linter silenced, tests passing — and let the pattern of ticks and
-  crosses do the argument.
-- Do not use the earlier six-files-versus-fifteen contrast. It came from pilot runs on
-  an earlier version of the task and it contradicts both the title and block 6.
-- Do not say "which model won" here or anywhere.
-- Do not claim the ranking would flip on a rerun. It did not: the two clean splits in
-  the data held 3–0 across every run.
+- One defect here, not three. The linter and the failing spec belong to block 6; naming
+  them now makes block 6 a recap of things the viewer heard at minute two.
+- Use the documentation defect specifically because it splits **within** both models —
+  one run of three on one side, two of three on the other. That is what makes it
+  evidence for "one run tells you nothing".
+- Do not use the linter split here. It is 3–0 by model, which is a difference *between*
+  models — the opposite of this block's argument. It is block 6's material.
+- Do not show a six-row table. That is block 6's graphic; showing it now spends it.
 
 ## Block 3 — The setup
-**3:00 – 6:00 · ~480 words · data-independent**
+**2:45 – 6:00 · ~480 words · data-independent**
 
 > SCREEN: the Chatwoot repo, file tree scrolling.
 
@@ -218,7 +208,7 @@ Everything else is fixed.
 - Do not explain the two baseline failures in detail. Name them, move on; the detail
   lives in the repo.
 ## Block 4 — How the measurement nearly lied
-**6:00 – 11:00 · ~760 words · data-independent**
+**6:00 – 11:30 · ~760 words · data-independent**
 
 > SCREEN: terminal, the harness finishing a run, everything green.
 
@@ -324,7 +314,7 @@ Nobody requires you to run a second model. That is the part that bothers me.
   about.
 - Final line lands better dry than indignant.
 ## Block 5 — Why the cost numbers you read are fake
-**11:00 – 14:00 · ~470 words · data-independent**
+**11:30 – 15:00 · ~470 words · data-independent**
 
 > SCREEN: a typical price-comparison table from a blog post.
 
@@ -337,8 +327,9 @@ That number cannot be compared across vendors, and I can show you why in one sen
 
 Different vendors tokenise text differently. The same paragraph becomes a different
 number of tokens depending on whose tokeniser reads it, and nobody publishes a
-conversion factor — Anthropic's own migration notes warn that even their own tokenisers
-shifted enough between model generations to require re-measuring.
+conversion factor between them. It moves even within one vendor: Anthropic's migration
+guidance tells you to re-measure your token counts when you change model generation,
+because the tokeniser changed underneath you.
 
 So "five dollars per million tokens" and "fifteen cents per million tokens" are prices
 for different quantities of the same thing. Every table built on them is comparing units
@@ -405,7 +396,7 @@ That turns out to be where it gets interesting.
 - The last two lines are the handoff to the result. Do not answer the question here,
   even if the answer is known by the time you record.
 ## Block 6 — What six runs actually showed
-**14:00 – 18:00 · ~620 words**
+**15:00 – 20:00 · ~620 words**
 
 > SCREEN: the Part A table, all six columns.
 
@@ -513,7 +504,7 @@ than scoring it as a point.
 ---
 
 ## Block 7 — What it costs, and what this does not prove
-**18:00 – 20:00 · ~330 words**
+**20:00 – 25:00 · ~330 words**
 
 > SCREEN: two numbers, billing pages behind them.
 
@@ -526,41 +517,41 @@ A hundred and sixty-five times.
 > SCREEN: the per-token price table.
 
 The headline prices say thirty-three to one on input. The billing says a hundred and
-sixty-five. So the table on every comparison page does not explain what I paid.
+sixty-five. So the table on every comparison page does not describe what I paid.
 
-> SCREEN: the bill broken down by token type.
+> SCREEN: the two effective rates.
 
-It is not volume. Both arms read a comparable amount of context — the cheap one, if
-anything, slightly more.
+Here is what I actually paid, and this comes from the providers' own usage pages, not
+from my tooling.
 
-Almost three quarters of the expensive bill is a line item that appears on no
-comparison page: **cache reads**. Context the model had already seen, billed at a
-discount. Both providers discount it. They discount it very differently — fifty cents
-per million against three tenths of a cent. That is a hundred and sixty-seven to one,
-against a headline ratio of thirty-three.
+Divide the bill by the tokens. On the expensive model I paid an effective **seventy-one
+cents** per million input tokens. Its list price is five dollars.
 
-> SCREEN: hold on the two ratios.
+I was not paying list. Almost nothing in an agent run is new text — it is the same
+repository, read again and again. Both providers discount that. They call it cached
+input, and they discount it very differently: fifty cents per million on one side,
+three tenths of a cent on the other — a hundred and sixty-seven to one, from the two
+published rate cards, against a headline ratio of thirty-three.
 
-And this is where I have to stop short of the neat version.
+> SCREEN: the two rate cards, cache lines highlighted.
 
-I would like to tell you that a hundred and sixty-seven explains a hundred and
-sixty-five. It is the right order of magnitude and it is the right mechanism. But to
-prove it I would have to decompose the bill precisely — and one of my two token
-counters is wrong. My tooling under-reports consumption on the expensive provider by
-somewhere around a factor of two, which I showed you three minutes ago and still cannot
-explain.
-
-So I can tell you the direction and not the arithmetic. The headline price ratio is not
-what you paid. The cache read rate is what moved the number. Exactly how much of it is
-the rate and how much is volume, I cannot separate with instruments I have already told
-you are unreliable.
+That line is what decided this comparison. It is a footnote on both pricing pages, it
+has no column in any comparison table I have seen, and how much of it you incur depends
+on your tooling rather than on the model.
 
 > SCREEN: back to camera.
 
-Which is, I think, the honest version of this whole video. I have a measured ratio I
-trust, because it came from two billing pages. I have an explanation I believe, because
-the mechanism and the magnitude both fit. And I do not have the proof, because proving
-it needs a number my tools get wrong.
+What I cannot give you is the precise split.
+
+To say "this much was cache and this much was fresh" I would need token counts broken
+down by type. Neither provider's usage page gives me that — they give totals in and
+totals out. The only thing that breaks it down is my own tooling, and I spent three
+minutes earlier telling you it under-reports the expensive provider by roughly a factor
+of two.
+
+So: the ratio is measured and I trust it. The mechanism is cached input, and the
+effective rates show it plainly. The exact decomposition needs a number nobody in this
+chain reports accurately.
 
 Saying it fits and calling that proof would have been the easiest paragraph in this
 script to write.
