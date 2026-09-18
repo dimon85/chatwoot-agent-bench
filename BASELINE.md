@@ -76,6 +76,27 @@ Deliberately NOT fixed — patching the repo would move the base SHA away from u
 
 ## Numbers
 
+### Locale must be pinned
+
+`package.json` runs vitest with `TZ=UTC` but does not pin the locale, and several specs
+assert formatted numbers and currency. `Intl` follows the shell, so on an untouched
+checkout:
+
+    LANG=en_US.UTF-8   4582 passed, 0 failed
+    LANG=uk_UA.UTF-8   4579 passed, 3 failed
+
+`useReportMetrics` expects `5,000` and gets `5 000`; two `ShopifyBilling` specs expect
+`$49.00` and get a space-grouped equivalent. No code change, no flakiness — entirely down
+to whose shell ran it.
+
+Every measured run in this project was executed with `LANG` unset, which resolves to
+`en-US`, so the series is internally consistent. But the figure below is an en-US figure,
+and it was only discovered when someone ran the harness from a Ukrainian-locale terminal
+the day after the series finished.
+
+The harness now exports `LANG=en_US.UTF-8` and `LC_ALL=en_US.UTF-8` in `lib.sh`, for the
+same reason `TZ=UTC` is in the test script.
+
 ### JS (vitest) — `pnpm test`
 
 | | |

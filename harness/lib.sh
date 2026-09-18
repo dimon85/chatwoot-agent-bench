@@ -25,6 +25,13 @@ load_credentials() {
 
 setup_toolchain() {
   load_credentials
+  # Locale is pinned for the same reason TZ is pinned in package.json's test script:
+  # several vitest specs assert formatted numbers and currency, and Intl follows the
+  # shell's locale. With LANG unset Node resolves to en-US and they pass; under a
+  # locale that groups thousands with a space they fail on an untouched checkout.
+  # Three specs, no code change, entirely down to who ran it.
+  export LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
   eval "$(rbenv init - zsh)"
   export PATH="/opt/homebrew/opt/postgresql@14/bin:$PATH"
   export NVM_DIR="$HOME/.nvm"

@@ -5,6 +5,9 @@ if something here has to change mid-series, the series restarts.
 
 ## Before starting
 
+- [ ] `LANG` and `LC_ALL` are exported as `en_US.UTF-8` — `lib.sh` does this, but check
+      if you invoke anything by hand. Three vitest specs assert formatted numbers and
+      fail under a locale that groups thousands with a space.
 - [ ] Nothing else heavy running. Suites are timed and one known failure is
       order-dependent; a busy machine can destabilise it.
 - [ ] `brew services list` — postgresql@14 and redis both started.
