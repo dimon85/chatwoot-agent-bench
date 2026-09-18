@@ -13,7 +13,8 @@ spends three minutes attacking.
 Chosen after the data. It survives the finding because it is literally what the six runs
 showed, and it forecloses the argument about which one "won".
 
-Target: ~20 minutes, English. Register: understate everything. The currency here is
+Target: ~25 minutes, English. Blocks 6 and 7 run long on purpose; the result and its
+caveats are the load-bearing half. Register: understate everything. The currency here is
 trust, and trust is built by claiming less than you can prove.
 
 ---
@@ -334,13 +335,14 @@ That number cannot be compared across vendors, and I can show you why in one sen
 
 > SCREEN: highlight "per million tokens".
 
-Different vendors tokenise text differently. Anthropic's own documentation says their
-newer tokeniser produces up to thirty-five percent more tokens for the same text than
-their previous one — and that is the same company comparing itself to itself.
+Different vendors tokenise text differently. The same paragraph becomes a different
+number of tokens depending on whose tokeniser reads it, and nobody publishes a
+conversion factor — Anthropic's own migration notes warn that even their own tokenisers
+shifted enough between model generations to require re-measuring.
 
 So "five dollars per million tokens" and "fifteen cents per million tokens" are prices
-for different quantities of the same thing. Every table built on them is comparing
-units it has not converted.
+for different quantities of the same thing. Every table built on them is comparing units
+it has not converted.
 
 > SCREEN: the DeepSeek pricing page, peak hours highlighted.
 
@@ -474,7 +476,7 @@ It was wrong. All six built the same dropdown. They just sourced the list from t
 different places — and three of them used the installation's own enabled languages,
 which is arguably the better choice.
 
-I found this out because someone opened the running application and looked.
+I found this out because I opened the running application and looked.
 
 That is the third time in this project that a conclusion from a single sample turned
 out to be false. The first two were mine about the models. This one was mine about my
@@ -494,8 +496,8 @@ That looks decisive. It is not.
 
 > SCREEN: the number 0.10.
 
-Three runs per model. A perfect split at that sample size has a two-sided probability
-of about ten percent. That is a signal worth telling you about. It is not a result I
+Three runs per model. A perfect split at that sample size gives a two-sided Fisher's
+exact probability of about ten percent. That is a signal worth telling you about. It is not a result I
 can assert.
 
 And there is a second problem with calling it a win. The task never asked for
