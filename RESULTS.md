@@ -70,6 +70,37 @@ explicitly tells contributors to prefer the smallest production-ready change and
 avoid speculative guards. Arm A exceeded the brief. Whether that is care or scope creep
 is a judgement, and it is stated here as one.
 
+## What counting missed
+
+Part A records that five of the six runs touched the same number of frontend files.
+That number is worthless on its own, and a human at the running application found out
+why within a minute.
+
+Five runs added a **plain text input**. You can type anything into it.
+
+One run — a1 — added a **searchable dropdown of ISO 639-1 languages**, built from
+`iso6391Languages`, a list this project already ships and already uses in conversation
+filters. It used `ComboBox`, the same component the country field in that very form
+uses. It pulled the country field's inline class expression out into a shared
+`comboBoxClass` rather than duplicating it. It added a separate i18n string for the
+dropdown's own search box.
+
+Combined with its backend validation against the same code set, an invalid language
+cannot be entered through the interface at all — not rejected after the fact,
+unreachable.
+
+Every automated step in this harness reported these runs as equivalent. rspec passed
+for all of them. eslint passed. The acceptance check passed. The file counts matched.
+The diff sizes were in the same range.
+
+The difference was visible in about sixty seconds of clicking.
+
+That is a limitation of the counting, and it is worth stating plainly rather than
+hiding: **Part A counts which files changed, not what was done inside them.** Part B
+exists because of that, and F3d — the requirement that the field be editable from the
+dashboard — is deliberately the one check assigned to a human rather than a script.
+This is what it caught.
+
 ## Cost per completed task
 
 Taken from provider billing, not from the harness.

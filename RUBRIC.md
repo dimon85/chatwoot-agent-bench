@@ -105,6 +105,16 @@ or widening one without noticing whose data it exposes. Record which direction.
 
 Three runs per arm, not five. See § Amendments, 2026-09-17.
 
+## Known limitation of Part A
+
+A7 and A7b count which frontend files a run touched. They do not and cannot capture
+what was built inside them. In the measured series, five runs adding a free-text input
+and one run adding a searchable dropdown backed by the project's own language list
+produced identical Part A rows.
+
+No automated step in this harness distinguished them. F3d, the human check against the
+running application, did — in about a minute. That is why it stays a human check.
+
 ## Interpretation gate (decided in advance)
 
 - F4–F7 present in either arm → the finding is about *what agents miss that CI doesn't catch*.
