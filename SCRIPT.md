@@ -1,14 +1,17 @@
 # Script — video 1
 
 Written before the measured series finished, so the narrative spine is on record with
-a date and cannot have been fitted to the result. Blocks marked MEASURED are left
-unwritten until the ten runs are classified.
+a date and cannot have been fitted to the result. The blocks that depend on the data
+were left unwritten until the runs were classified.
 
-**Title: "The $25 model and the $0.15 model wrote the same code"**
+**Title: "The $5 model and the $0.15 model wrote the same code"**
 
-Chosen after the data, not before. It survives the finding because it is literally what
-the six runs showed — the core diffs were indistinguishable — and it forecloses the
-argument the comment section would otherwise have about which one "won".
+Both figures are input prices. An earlier draft used "$25 and $0.15", which pairs one
+model's output price against the other's input price — the exact unit error block 5
+spends three minutes attacking.
+
+Chosen after the data. It survives the finding because it is literally what the six runs
+showed, and it forecloses the argument about which one "won".
 
 Target: ~20 minutes, English. Register: understate everything. The currency here is
 trust, and trust is built by claiming less than you can prove.
@@ -58,50 +61,60 @@ Here is what I found.
 
 ---
 
-## Block 2 — Why every answer you have seen is measuring noise
-**0:45 – 3:00 · ~340 words · data-independent**
+## Block 2 — Why one run tells you nothing
+**0:45 – 3:00 · ~350 words · rewritten after the results**
 
-> SCREEN: two file trees side by side, same prompt visible above both.
+> SCREEN: a typical "I tested two models" post.
 
-There is a genre of video and blog post that goes like this. Someone takes two models,
-gives each of them a task, looks at the output, and tells you which one is better.
+There is a genre that goes like this. Take two models, give each one a task, look at the
+output, tell people which is better.
 
-I want to show you why that number is worthless. Not biased. Not incomplete. Worthless.
+I want to show you why one run cannot answer that question — and it is not the reason
+you would guess.
 
-> SCREEN: the two diffs, file counts highlighted.
+> SCREEN: six diff summaries in a row, file counts visible.
 
-Here are two runs. Same model. Same prompt, character for character. Same repository,
-same commit. Same settings, pinned explicitly.
+I ran the same task six times. Three per model. And the code came out remarkably
+consistent. Same migration. Same entry point out of the four this codebase has. Same
+serializer out of three. Same component in the interface. Every run produced a working
+feature.
 
-One of them changed six files. The other changed fifteen.
+If you ran this once, you would conclude the models are interchangeable. That is roughly
+true of the code.
 
-Not a different model. The same one, twice.
+> SCREEN: the defect table — three columns, six rows.
 
-> SCREEN: hold on the two numbers.
+It is not true of the defects.
 
-So when you see a post saying model A scored eighty-five and model B scored
-eighty-two — three points apart, one run each — you are not looking at a difference
-between two models. You are looking at one sample from each of two distributions you
-have not measured, and being told the sample is the distribution.
+Three of those six runs edited the API documentation and never rebuilt it, so the docs
+that actually get served do not have the change. Three of six ran into a linter limit
+and switched the linter off for their own file. One shipped tests that assert a
+validation it never wrote — failing, in its own commit.
 
-Run it again and the ranking can flip. Nobody runs it again, because running it again
-is boring and the first number already looks like an answer.
+Every one of those runs passed the test suite. Five of the six reported zero lint
+problems.
 
-> SCREEN: the benchmark repo, commit history visible.
+> SCREEN: highlight a single row.
 
-That is the whole reason this took me a week instead of an afternoon. Five runs per
-model, not one. A rubric written down and committed before the first run, so I could
-not quietly move the goalposts once I saw the results. Every run published — the
-prompt, the diffs, the logs, the failures.
+Now pick one run at random and write a post about it. Depending on which one you picked,
+you would have concluded that this model documents properly, or that it does not. That
+it respects the linter, or that it disables it. That it ships working tests, or broken
+ones.
 
-And the part I did not expect: most of that week was not spent measuring the models.
-It was spent discovering that my measurement was lying to me. Five separate times.
+Same model. Same prompt. Same commit.
 
-> SCREEN: brief flash of the five bug commit titles, unreadable, just texture.
+> SCREEN: the benchmark repo, commit history.
+
+That is why this took a week. A rubric committed before the first run so I could not
+move the goalposts. Every run published — prompts, diffs, logs, failures.
+
+And most of that week did not go into measuring the models. It went into discovering
+that my measurement was lying to me. Five separate times.
+
+> SCREEN: brief flash of the fix commits, unreadable, texture only.
 
 One of those bugs nearly made me publish a confident, well-evidenced, completely false
-claim about one of these models. I will show you exactly how close that got, because
-it is the most useful thing in this video — more useful than which model won.
+claim. That is the most useful thing in this video.
 
 > SCREEN: cut to Block 3.
 
@@ -109,15 +122,17 @@ it is the most useful thing in this video — more useful than which model won.
 
 ## Production notes for Block 2
 
-- The six-versus-fifteen contrast carries the block. Get both diffs on screen at once;
-  do not narrate the file list, let the counts do it.
-- Do not name the post being criticised. The genre is the target, not a person.
-- "Five separate times" is the hook into Block 4. Do not explain the bugs here.
-- Source for the six-vs-fifteen figure: to be taken from the measured series if the
-  spread appears there, from the published pilots otherwise — labelled as pilots on
-  screen either way.
-
----
+- The turn is "It is not true of the defects." Everything before it sets up the
+  expectation that the models are interchangeable; everything after shows the variance
+  is real but lives somewhere nobody photographs.
+- The defect table is the block. Build it as one graphic, six rows, three columns —
+  docs regenerated, linter silenced, tests passing — and let the pattern of ticks and
+  crosses do the argument.
+- Do not use the earlier six-files-versus-fifteen contrast. It came from pilot runs on
+  an earlier version of the task and it contradicts both the title and block 6.
+- Do not say "which model won" here or anywhere.
+- Do not claim the ranking would flip on a rerun. It did not: the two clean splits in
+  the data held 3–0 across every run.
 
 ## Block 3 — The setup
 **3:00 – 6:00 · ~480 words · data-independent**
@@ -506,14 +521,36 @@ Eleven dollars and one cent. Six point seven cents.
 
 A hundred and sixty-five times.
 
-> SCREEN: the per-token price table next to it.
+> SCREEN: the per-token price table.
 
-Which is bigger than the per-token gap, and that surprised me. Per token, the ratio is
-thirty-three to one on input.
+The headline prices say thirty-three to one. The measurement says a hundred and
+sixty-five. So where does the rest come from?
 
-The reason is that the cheap model did not do less work. Context consumed was twenty-
-seven million tokens for the expensive one and thirty million for the cheap one. Almost
-identical. The price difference is the rate, not the volume.
+> SCREEN: the token breakdown by type.
+
+Not from volume. Both arms consumed about the same amount — twenty-seven million
+tokens of context for the expensive model, thirty million for the cheap one. If
+anything the cheap one did slightly more work.
+
+It comes from a line item that is not in anybody's comparison table.
+
+> SCREEN: cache read rates, side by side.
+
+Nearly three quarters of what I paid on the expensive side was **cache reads** — context
+the model had already seen, billed at a discount. Both providers discount it. They
+discount it very differently.
+
+Fifty cents per million on one. Three tenths of a cent on the other.
+
+That is a hundred and sixty-seven to one — and my measured ratio was a hundred and
+sixty-five.
+
+> SCREEN: 167 next to 165.
+
+So the number that decided this comparison is not the price on the pricing page. It is
+the cache read rate, which is a footnote on both of them, and which depends on how much
+context your tooling re-reads — something neither vendor controls and no comparison
+table has a column for.
 
 After my pilot runs I predicted the opposite — that the expensive model would be more
 efficient per task and the gap would narrow. That prediction came from a single run. It
