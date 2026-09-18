@@ -124,7 +124,27 @@ Taken from provider billing, not from the harness.
 | Arm A | $33.04 | **$11.01** |
 | Arm B | $0.20 | **$0.067** |
 
-**165×.**
+**164×.**
+
+These are balance deltas bracketing the six measured runs, not console daily totals. They
+reconcile: $5.68 for the pilots plus $33.04 for the series is $38.72, which is what the
+Anthropic console billed for 2026-09-17. Comparing the daily totals instead gives 73×,
+because that day contained one pilot on the expensive side and two on the cheap one.
+
+### Where the expensive money went
+
+The Anthropic console's caching page reports a read ratio of 100% and write amortisation
+of 36.1× for the day. That gives an input composition of **97.3% cache reads, 2.7% cache
+writes, uncached effectively zero** — 46.6M against 1.3M tokens.
+
+Checked against the bill: 46.61M x $0.50 + 1.29M x $6.25 = $31.38, against $31.29 of
+actual input charges once output is removed. 0.3% apart, which also confirms the $0.50
+and $6.25 rates rather than assuming them.
+
+Cache writes were **2.7% of input volume and 26% of the input bill**.
+
+DeepSeek's console publishes no equivalent breakdown, so the same decomposition cannot be
+done on the cheap side.
 
 That is larger than the per-token ratio, which is 33× on input and 42× on output. The
 reason is that the cheaper model did not do less work — context consumed was 27.2M

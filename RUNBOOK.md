@@ -52,6 +52,15 @@ Interleaving the arms is fine and arguably better — it spreads any drift in th
 machine or the services across both. Do not run two at once: the measurement is
 timed and the suites compete for CPU and Postgres.
 
+## Use a separate API key per arm
+
+Both consoles filter by API key. This series did not, so per-run costs had to be
+reconstructed from balance deltas bracketing each run — which works, and reconciles with
+the daily total, but only because the runs were serial and nothing else was using the
+key.
+
+One key per arm, or per run, and the provider's own console gives per-run cost directly.
+
 ## Time-of-day pricing
 
 DeepSeek prices by the clock — off-peak runs are cheaper than peak ones. The series
