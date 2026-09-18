@@ -208,111 +208,108 @@ Everything else is fixed.
 - Do not explain the two baseline failures in detail. Name them, move on; the detail
   lives in the repo.
 ## Block 4 — How the measurement nearly lied
-**7:52 – 12:59 · ~768 words · data-independent**
+**7:52 – 12:59 · recording draft, breath-marked**
 
-> SCREEN: terminal, the harness finishing a run, everything green.
+> `/` = breath. `//` = hold the pause.
 
-At this point I had a harness I trusted. It checked out the same commit every time,
-gave each run its own database, ran the test suite in a fixed order, and compared the
+At this point I had a harness I trusted. It checked out the same commit every time, /
+gave each run its own database, / ran the test suite in a fixed order, / and compared the
 failures against a baseline I had measured three times.
 
-I had even validated it the careful way: I ran it against a worktree where no agent had
-touched anything. Nine thousand four hundred and fifty tests, exactly the two failures
-I expected, empty diff. The instrument was working.
+I had even validated it the careful way. I ran it against a worktree where no agent had
+touched anything. / Nine thousand four hundred and fifty tests, / exactly the two failures
+I expected, / empty diff.
 
-> SCREEN: the 359-failure output scrolling.
+The instrument was working. //
 
 Then I ran the second model for the first time, and the suite came back with three
-hundred and fifty-nine failures. Two of those are the known pair I just described. The
+hundred and fifty-nine failures. / Two of those are the known pair I just described. / The
 other three hundred and fifty-seven had been passing an hour earlier.
 
-> SCREEN: hold on the failure list — billing, Captain, Cloudflare, Facebook.
+Look at where they are. / Billing. / An AI assistant module. / Cloudflare hostname checks.
+/ Facebook message delivery.
 
-Look at where they are. Billing. An AI assistant module. Cloudflare hostname checks.
-Facebook message delivery. The task was adding one string column to a contacts table.
+The task was adding one string column to a contacts table. //
 
-And here is the thing I want you to sit with for a second: I had a story ready. *This
-model is reckless. It touches things it shouldn't. Look at the blast radius.* It would
-have been a great segment. Two hundred and ninety-four of those failures were the same
-database error, which makes a beautiful screenshot.
+And I had a story ready. // *This model is reckless. It touches things it shouldn't. Look
+at the blast radius.* / It would have been a great segment. / Two hundred and ninety-four
+of those failures were the same database error, / which makes a beautiful screenshot.
 
-It was completely false.
+It was completely false. //
 
-> SCREEN: the rake file, four lines.
+The cause is at the top of a file called `db_enhancements.rake`.
 
-Here is the actual cause. Four lines in a file called `db_enhancements.rake`:
+Every time anyone runs `db:migrate` in this repository, / it also loads a hundred and
+thirteen configuration rows into a table. / The test suite expects that table to be empty.
+/ So it collapses.
 
-    Rake::Task['db:migrate'].enhance do
-      ConfigLoader.new.process
-    end
+And look at the first line. // There is a comment explaining exactly that. / It prints a
+message to the log every single time it fires. / This was not hidden. / I lost a day to it
+anyway. //
 
-Every time anyone runs `db:migrate` in this repository, it also loads a hundred and
-thirteen configuration rows into a table. The test suite expects that table to be
-empty. So it collapses.
+The model had run `db:migrate`. / After writing a migration. / Which is exactly what it
+should have done. //
 
-The model had run `db:migrate`. After writing a migration. Which is the correct thing
-to do.
+The first model I tested never ran it — it wrote the migration and moved on. / So the bug
+had been sitting in my harness the whole time, / invisible, / waiting for an agent that
+behaved slightly differently.
 
-> SCREEN: side by side, two runs.
+And my careful null-run validation? / Useless against this. / Nothing had happened in that
+worktree. // You cannot catch a bug about what agents do / by measuring a run where no
+agent did anything. //
 
-The first model I tested never ran it — it wrote the migration and moved on. So the
-bug had been sitting in my harness the entire time, invisible, waiting for an agent
-that behaved slightly differently.
+So I fixed it. / And the fix uncovered the next one.
 
-And my careful null-run validation? Useless against this. Nothing had happened in that
-worktree. You cannot catch a bug about what agents do by measuring a run where no agent
-did anything.
+The same task had been quietly rewriting the schema file. / Which meant the diff I was
+recording was no longer the diff the agent produced. / My measurement was editing the
+thing it measured.
 
-> SCREEN: commit log, the fixes going by.
+Fixed that too. / Then the third. / The database reset I had put in its place was failing,
+/ and my script was swallowing the error with `|| true`. / So it measured against a dirty
+database and produced four hundred and thirty failures, / four hundred and twenty-eight of
+them new. / Again, none of them the agent's.
 
-I fixed it. Then the fix revealed the next one: the same task had been quietly
-rewriting the schema file, which meant the diff I was recording was no longer the diff
-the agent produced. My measurement was editing the thing it measured.
+That one was my fault twice over. // The root cause was a decision I made. / I had given
+each run its own database name — / and in this codebase, that single name is used by both
+the development and the test environment. / So an agent running a perfectly ordinary
+command in development / stamped the database in a way that made the test reset refuse to
+run. //
 
-Fixed that. Which revealed the third: the database reset I had replaced it with was
-failing, and my script was swallowing the error with `|| true`. So it measured against
-a dirty database and produced four hundred and thirty failures, four hundred and
-twenty-eight of them new — again, none of them the agent's.
+And then, separately, one of the runs did something I had not thought to look for.
 
-That one was my fault twice over. The root cause was a decision I made: I had given
-each run its own database name, and in this codebase that single name is used by both
-the development and the test environment. So an agent running a perfectly ordinary
-command in development stamped the database in a way that made the test reset refuse
-to run.
+Its change made a class too long for the linter. / Instead of accepting the warning, / it
+opened the linter's configuration file / and added its own file to the exemption list.
 
-> SCREEN: the rubocop diff.
+My harness reported zero lint violations. / The number was true. // It was also
+meaningless. //
 
-And then, separately, one of the runs did something I had not thought to look for. Its
-change made a class too long for the linter. Instead of accepting the warning, it
-opened the linter's configuration file and added its own file to the exemption list.
+Three bugs that manufactured failures, / and one blind spot I found by accident. / There
+were two more that only cost me metrics, / and they are in the commit history if you want
+them.
 
-My harness reported zero lint violations. The number was true. It was also meaningless.
+Every one of them gave me numbers that looked clean and confident.
 
-> SCREEN: back to camera.
-
-So: five separate ways the measurement was wrong, and every single one of them
-produced clean, confident, screenshot-ready numbers.
-
-What caught them was not rigour. It was running a second model. If I had only ever
-tested one, the harness would have looked perfect, and everything after this point in
+What caught them was not rigour. / It was running a second model. / If I had only ever
+tested one, / the harness would have looked perfect, / and everything after this point in
 the video would have been wrong.
 
-Nobody requires you to run a second model. That is the part that bothers me.
+Nobody requires you to run a second model. // That is the part that bothers me.
 
 ---
 
 ## Production notes for Block 4
 
-- The emotional beat is "I had a story ready." Do not rush it. The admission that a
-  false conclusion was *attractive* is what makes the rest credible.
-- Show the rake file in full. Four lines, no scrolling. The gap between the cause and
-  the 359 failures is the whole point.
-- Do not name the model that hit the bug. It did nothing wrong; naming it invites the
-  comment section to blame it anyway.
-- "That one was my fault twice over" — keep it. Distributing blame to the tooling when
-  the root cause was a design decision would be the exact dishonesty this video is
-  about.
-- Final line lands better dry than indignant.
+- The emotional beat is "I had a story ready." Do not rush it.
+- **The rake file is seven lines, not four, and the first is a comment describing the
+  behaviour.** That comment is the strongest frame in the block: the mechanism announced
+  itself, printed to the log on every run, and still cost a day. Frame the shot so line
+  one is legible.
+- Do not name the model that hit the bug. It did nothing wrong.
+- "That one was my fault twice over" stays. The root cause was a design decision of mine.
+- Count honestly: three harness bugs are shown, the linter is an agent behaviour, and two
+  more exist but are not worth screen time. Do not say "five" over four things.
+- "It was completely false" and "It was also meaningless" are camera, not screen.
+
 ## Block 5 — Why the cost numbers you read are fake
 **12:59 – 16:45 · ~565 words · data-independent**
 
