@@ -27,7 +27,7 @@ trust, and trust is built by claiming less than you can prove.
 Eleven dollars and one cent. Six point seven cents.
 
 Same task. Same repository, same commit, same prompt. One of these models costs a
-hundred and sixty-five times more than the other to finish the same piece of work.
+hundred and sixty-four times more than the other to finish the same piece of work.
 
 > SCREEN: the two diffs, side by side, scrolling together.
 
@@ -347,9 +347,14 @@ because anything about the work changed.
 
 Third problem, and this is the one that actually caught me.
 
-My tooling reported what each run cost. For the cheap model it said sixteen cents. The
-provider's own billing page said thirty-two. Exactly double — because the tool prices
-everything at the base rate and knows nothing about peak windows.
+My tooling reported what each run cost. On two early runs of the cheap model it said
+sixteen cents. The provider's billing page said thirty-two. Exactly double.
+
+Those two runs happened to start inside the peak window. The tool prices everything at
+the off-peak rate and knows nothing about the clock, so it was wrong by exactly the peak
+multiplier. I moved the real series outside that window afterwards — which is why the
+numbers later in this video are not doubled, and why I know the doubling was the clock
+and not something else.
 
 Fine, I thought. Off by a known factor. Then I checked the other provider.
 
@@ -508,17 +513,25 @@ Cost per finished task, taken from the providers' billing, not from my tooling.
 
 Eleven dollars and one cent. Six point seven cents.
 
-A hundred and sixty-five times.
+About a hundred and sixty-four times.
 
 > SCREEN: the per-token price table.
 
 The headline prices say thirty-three to one on input. The billing says a hundred and
-sixty-five. The table on every comparison page does not describe what I paid.
+sixty-four. The table on every comparison page does not describe what I paid.
 
 > SCREEN: both rate cards, the cached-input lines highlighted.
 
 Almost nothing in an agent run is new text. It is the same repository, read again and
-again. Both providers discount that, and they call it cached input.
+again — and I can put a number on that, from one run where the usage page gave me both
+the tokens and the bill.
+
+Six point four million input tokens. Four dollars and fifty cents of input charges.
+That is seventy-one cents per million, on a model whose list price for fresh input is
+five dollars. For the average to land that low, the overwhelming majority of that input
+has to be billed at the cached rate rather than the fresh one.
+
+Both providers discount cached input. They discount it very differently.
 
 Fifty cents per million on the expensive one. Three tenths of a cent on the cheap one.
 A hundred and sixty-seven to one, from the two published rate cards, against a headline
@@ -530,17 +543,17 @@ straddled the boundary would not have one ratio at all.
 
 > SCREEN: back to camera.
 
-What I cannot give you is the split inside that input.
+What I cannot give you is the exact split.
 
-How much was fresh text, how much was written to cache, how much was read back — that
-needs token counts by type, and neither provider's usage page breaks them down. It gives
-totals in and totals out. The only thing that breaks it down further is my own tooling,
-which I spent three minutes earlier telling you under-reports this provider by roughly a
-factor of two.
+Cached input is billed in two directions — what you write into the cache costs more than
+fresh text, what you read back costs a tenth of it. One average rate cannot separate
+those two, and the usage page does not break input down by type; it gives totals in and
+totals out. The only thing that separates them is my own tooling, which I spent three
+minutes earlier telling you under-reports this provider by roughly a factor of two.
 
-So: the ratio is measured and I trust it. The mechanism is cached input, and the two
-rate cards show why. The exact composition of the input needs a number nobody in this
-chain reports accurately.
+So: the ratio is measured and I trust it. The direction is settled — the input is
+overwhelmingly cache, or the average could not be where it is. What I cannot hand you is
+the precise share of writes against reads.
 
 Saying it fits and calling that proof would have been the easiest paragraph in this
 script to write.
