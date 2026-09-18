@@ -523,59 +523,45 @@ A hundred and sixty-five times.
 
 > SCREEN: the per-token price table.
 
-The headline prices say thirty-three to one. The measurement says a hundred and
-sixty-five. So where does the rest come from?
+The headline prices say thirty-three to one on input. The billing says a hundred and
+sixty-five. So the table on every comparison page does not explain what I paid.
 
-> SCREEN: the token breakdown by type.
+> SCREEN: the bill broken down by token type.
 
-Not from volume. Both arms consumed about the same amount — twenty-seven million
-tokens of context for the expensive model, thirty million for the cheap one. If
-anything the cheap one did slightly more work.
+It is not volume. Both arms read a comparable amount of context — the cheap one, if
+anything, slightly more.
 
-It comes from a line item that is not in anybody's comparison table.
+Almost three quarters of the expensive bill is a line item that appears on no
+comparison page: **cache reads**. Context the model had already seen, billed at a
+discount. Both providers discount it. They discount it very differently — fifty cents
+per million against three tenths of a cent. That is a hundred and sixty-seven to one,
+against a headline ratio of thirty-three.
 
-> SCREEN: cache read rates, side by side.
+> SCREEN: hold on the two ratios.
 
-Nearly three quarters of what I paid on the expensive side was **cache reads** — context
-the model had already seen, billed at a discount. Both providers discount it. They
-discount it very differently.
+And this is where I have to stop short of the neat version.
 
-Fifty cents per million on one. Three tenths of a cent on the other.
+I would like to tell you that a hundred and sixty-seven explains a hundred and
+sixty-five. It is the right order of magnitude and it is the right mechanism. But to
+prove it I would have to decompose the bill precisely — and one of my two token
+counters is wrong. My tooling under-reports consumption on the expensive provider by
+somewhere around a factor of two, which I showed you three minutes ago and still cannot
+explain.
 
-That is a hundred and sixty-seven to one — and my measured ratio was a hundred and
-sixty-five.
+So I can tell you the direction and not the arithmetic. The headline price ratio is not
+what you paid. The cache read rate is what moved the number. Exactly how much of it is
+the rate and how much is volume, I cannot separate with instruments I have already told
+you are unreliable.
 
-> SCREEN: 167 next to 165.
+> SCREEN: back to camera.
 
-So the number that decided this comparison is not the price on the pricing page. It is
-the cache read rate, which is a footnote on both of them, and which depends on how much
-context your tooling re-reads — something neither vendor controls and no comparison
-table has a column for.
+Which is, I think, the honest version of this whole video. I have a measured ratio I
+trust, because it came from two billing pages. I have an explanation I believe, because
+the mechanism and the magnitude both fit. And I do not have the proof, because proving
+it needs a number my tools get wrong.
 
-After my pilot runs I predicted the opposite — that the expensive model would be more
-efficient per task and the gap would narrow. That prediction came from a single run. It
-was wrong. I am leaving it in the repository with the timestamp on it.
-
-> SCREEN: the two harness rows.
-
-One more caveat, and it is the one I would lead with if I were arguing against this
-video.
-
-Eleven dollars is what the expensive model costs *through the tool I used*. Not what it
-costs.
-
-I have the same model, on the same repository, measured through a different tool
-earlier in this project. Thirty-odd steps instead of up to a hundred and seventeen.
-Under three minutes instead of up to twenty-five. A fraction of the context.
-
-The comparison is not clean — those earlier runs were on a slightly smaller version of
-the task — but the task grew by about ten lines, and the context grew sevenfold. That
-is not the task.
-
-So the ratio between the two models holds: they ran under the same tool, and the
-difference between them is real. The absolute number does not travel. Quote eleven
-dollars anywhere without saying which tool produced it and you have made exactly the
-kind of claim this video spent twenty minutes arguing against.
+Saying it fits and calling that proof would have been the easiest paragraph in this
+script to write.
 
 > SCREEN: the limits, plainly listed.
 
