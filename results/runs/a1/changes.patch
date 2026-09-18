@@ -1,0 +1,1172 @@
+diff --git a/.rubocop.yml b/.rubocop.yml
+index 353617396..31fea2eb7 100644
+--- a/.rubocop.yml
++++ b/.rubocop.yml
+@@ -18,6 +18,7 @@ Metrics/ClassLength:
+   Exclude:
+     - 'app/models/message.rb'
+     - 'app/models/conversation.rb'
++    - 'app/models/contact.rb'
+     - 'config/initializers/rack_attack.rb'
+ 
+ Metrics/MethodLength:
+diff --git a/app/controllers/api/v1/accounts/contacts_controller.rb b/app/controllers/api/v1/accounts/contacts_controller.rb
+index bc1082583..4701e2ae4 100644
+--- a/app/controllers/api/v1/accounts/contacts_controller.rb
++++ b/app/controllers/api/v1/accounts/contacts_controller.rb
+@@ -171,7 +171,8 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
+   end
+ 
+   def permitted_params
+-    params.permit(:name, :identifier, :email, :phone_number, :avatar, :blocked, :avatar_url, additional_attributes: {}, custom_attributes: {})
++    params.permit(:name, :identifier, :email, :phone_number, :avatar, :blocked, :avatar_url, :preferred_language,
++                  additional_attributes: {}, custom_attributes: {})
+   end
+ 
+   def contact_custom_attributes
+diff --git a/app/javascript/dashboard/components-next/Contacts/ContactsForm/ContactsForm.spec.js b/app/javascript/dashboard/components-next/Contacts/ContactsForm/ContactsForm.spec.js
+new file mode 100644
+index 000000000..b730edf18
+--- /dev/null
++++ b/app/javascript/dashboard/components-next/Contacts/ContactsForm/ContactsForm.spec.js
+@@ -0,0 +1,94 @@
++import { flushPromises, mount } from '@vue/test-utils';
++import ContactsForm from './ContactsForm.vue';
++
++vi.mock('vue-i18n', () => ({
++  useI18n: () => ({ t: key => key }),
++}));
++
++vi.mock('dashboard/composables/useAccount', () => ({
++  useAccount: () => ({
++    currentAccount: { value: { id: 1 } },
++    isCloudFeatureEnabled: () => false,
++  }),
++}));
++
++const PREFERRED_LANGUAGE_PLACEHOLDER =
++  'CONTACTS_LAYOUT.CARD.EDIT_DETAILS_FORM.FORM.PREFERRED_LANGUAGE.PLACEHOLDER';
++
++const ComboBoxStub = {
++  props: ['modelValue', 'options', 'placeholder'],
++  emits: ['update:modelValue'],
++  template: '<div />',
++};
++
++const InputStub = {
++  props: ['modelValue', 'placeholder'],
++  emits: ['update:modelValue'],
++  template: '<input />',
++};
++
++const contactData = {
++  id: 7,
++  name: 'Ada Lovelace',
++  email: 'ada@example.com',
++  phoneNumber: '+15551234567',
++  preferredLanguage: 'es',
++  additionalAttributes: {},
++};
++
++const mountForm = (props = {}) =>
++  mount(ContactsForm, {
++    props: { contactData, ...props },
++    global: {
++      stubs: {
++        ComboBox: ComboBoxStub,
++        Input: InputStub,
++        PhoneNumberInput: true,
++        CompanySelector: true,
++        Icon: true,
++      },
++    },
++  });
++
++const findLanguageComboBox = wrapper =>
++  wrapper
++    .findAllComponents(ComboBoxStub)
++    .find(
++      combobox =>
++        combobox.props('placeholder') === PREFERRED_LANGUAGE_PLACEHOLDER
++    );
++
++describe('ContactsForm', () => {
++  it("shows the contact's saved preferred language", () => {
++    const languageComboBox = findLanguageComboBox(mountForm());
++
++    expect(languageComboBox.props('modelValue')).toBe('es');
++  });
++
++  it('emits the selected preferred language', async () => {
++    const wrapper = mountForm();
++
++    await findLanguageComboBox(wrapper).vm.$emit('update:modelValue', 'fr');
++    await flushPromises();
++
++    const [payload] = wrapper.emitted('update').at(-1);
++    expect(payload.preferredLanguage).toBe('fr');
++  });
++
++  it('emits a blank preferred language when the selection is cleared', async () => {
++    const wrapper = mountForm();
++
++    await findLanguageComboBox(wrapper).vm.$emit('update:modelValue', '');
++    await flushPromises();
++
++    const [payload] = wrapper.emitted('update').at(-1);
++    expect(payload.preferredLanguage).toBe('');
++  });
++
++  it('offers ISO 639-1 languages without regional locale variants', () => {
++    const options = findLanguageComboBox(mountForm()).props('options');
++
++    expect(options).toContainEqual({ label: 'Spanish', value: 'es' });
++    expect(options.map(option => option.value)).not.toContain('pt_BR');
++  });
++});
+diff --git a/app/javascript/dashboard/components-next/Contacts/ContactsForm/ContactsForm.vue b/app/javascript/dashboard/components-next/Contacts/ContactsForm/ContactsForm.vue
+index 7510346f6..4f5c80314 100644
+--- a/app/javascript/dashboard/components-next/Contacts/ContactsForm/ContactsForm.vue
++++ b/app/javascript/dashboard/components-next/Contacts/ContactsForm/ContactsForm.vue
+@@ -5,6 +5,7 @@ import { required, email } from '@vuelidate/validators';
+ import { useVuelidate } from '@vuelidate/core';
+ import { splitName } from '@chatwoot/utils';
+ import countries from 'shared/constants/countries.js';
++import { iso6391Languages } from 'dashboard/components/widgets/conversation/advancedFilterItems/languages';
+ import { FEATURE_FLAGS } from 'dashboard/featureFlags';
+ import { useAccount } from 'dashboard/composables/useAccount';
+ import Input from 'dashboard/components-next/input/Input.vue';
+@@ -40,6 +41,7 @@ const FORM_CONFIG = {
+   PHONE_NUMBER: { field: 'phoneNumber' },
+   CITY: { field: 'additionalAttributes.city' },
+   COUNTRY: { field: 'additionalAttributes.countryCode' },
++  PREFERRED_LANGUAGE: { field: 'preferredLanguage' },
+   BIO: { field: 'additionalAttributes.description' },
+   COMPANY_NAME: { field: 'additionalAttributes.companyName' },
+ };
+@@ -63,6 +65,7 @@ const defaultState = {
+   firstName: '',
+   lastName: '',
+   phoneNumber: '',
++  preferredLanguage: '',
+   additionalAttributes: {
+     description: '',
+     companyName: '',
+@@ -121,6 +124,7 @@ const prepareStateBasedOnProps = () => {
+     name = '',
+     email: emailAddress,
+     phoneNumber,
++    preferredLanguage = '',
+     companyId = '',
+     additionalAttributes = {},
+   } = props.contactData || {};
+@@ -150,6 +154,7 @@ const prepareStateBasedOnProps = () => {
+     lastName,
+     email: emailAddress,
+     phoneNumber,
++    preferredLanguage: preferredLanguage || '',
+     additionalAttributes: {
+       description,
+       companyName,
+@@ -169,6 +174,16 @@ const countryOptions = computed(() =>
+   countries.map(({ name, id }) => ({ label: name, value: id }))
+ );
+ 
++const preferredLanguageOptions = computed(() =>
++  iso6391Languages.map(({ name, id }) => ({ label: name, value: id }))
++);
++
++const comboBoxClass = computed(() => ({
++  '[&>div>button]:bg-n-alpha-black2 [&>div>button:not(.focused)]:!outline-transparent':
++    !props.isDetailsView,
++  '[&>div>button]:!bg-n-alpha-black2': props.isDetailsView,
++}));
++
+ const editDetailsForm = computed(() =>
+   Object.keys(FORM_CONFIG).map(key => ({
+     key,
+@@ -249,6 +264,11 @@ const handleCountrySelection = value => {
+   emit('update', state);
+ };
+ 
++const handlePreferredLanguageSelection = async value => {
++  state.preferredLanguage = value;
++  await emitContactUpdate();
++};
++
+ const handleCompanySelection = async ({ id, name }) => {
+   state.companyId = id || '';
+   state.additionalAttributes.companyName = name || '';
+@@ -304,13 +324,23 @@ defineExpose({
+             :options="countryOptions"
+             :placeholder="item.placeholder"
+             class="[&>div>button]:h-8"
+-            :class="{
+-              '[&>div>button]:bg-n-alpha-black2 [&>div>button:not(.focused)]:!outline-transparent':
+-                !isDetailsView,
+-              '[&>div>button]:!bg-n-alpha-black2': isDetailsView,
+-            }"
++            :class="comboBoxClass"
+             @update:model-value="handleCountrySelection"
+           />
++          <ComboBox
++            v-else-if="item.key === 'PREFERRED_LANGUAGE'"
++            :model-value="state.preferredLanguage"
++            :options="preferredLanguageOptions"
++            :placeholder="item.placeholder"
++            :search-placeholder="
++              t(
++                'CONTACTS_LAYOUT.CARD.EDIT_DETAILS_FORM.FORM.PREFERRED_LANGUAGE.SEARCH_PLACEHOLDER'
++              )
++            "
++            class="[&>div>button]:h-8"
++            :class="comboBoxClass"
++            @update:model-value="handlePreferredLanguageSelection"
++          />
+           <PhoneNumberInput
+             v-else-if="item.key === 'PHONE_NUMBER'"
+             v-model="getFormBinding(item.key).value"
+diff --git a/app/javascript/dashboard/components/widgets/conversation/advancedFilterItems/languages.js b/app/javascript/dashboard/components/widgets/conversation/advancedFilterItems/languages.js
+index ffe61edd1..9bb22dcdd 100644
+--- a/app/javascript/dashboard/components/widgets/conversation/advancedFilterItems/languages.js
++++ b/app/javascript/dashboard/components/widgets/conversation/advancedFilterItems/languages.js
+@@ -748,4 +748,10 @@ export const getLanguageDirection = (languageCode = '') => {
+   return rtlLanguageIds.includes(languageCode);
+ };
+ 
++// This list also carries regional locale variants (eg. pt_BR) that exist because
++// Chatwoot ships a UI translation for them. A contact's preferred language is a
++// language rather than a locale, and the API only accepts ISO 639-1 codes, so
++// those variants are excluded here.
++export const iso6391Languages = languages.filter(({ id }) => !id.includes('_'));
++
+ export default languages;
+diff --git a/app/javascript/dashboard/i18n/locale/en/contact.json b/app/javascript/dashboard/i18n/locale/en/contact.json
+index db22fbdc2..05888b07f 100644
+--- a/app/javascript/dashboard/i18n/locale/en/contact.json
++++ b/app/javascript/dashboard/i18n/locale/en/contact.json
+@@ -130,6 +130,11 @@
+         "PLACEHOLDER": "Enter the city name",
+         "LABEL": "City Name"
+       },
++      "PREFERRED_LANGUAGE": {
++        "PLACEHOLDER": "Select a language",
++        "SEARCH_PLACEHOLDER": "Search languages",
++        "LABEL": "Preferred Language"
++      },
+       "SOCIAL_PROFILES": {
+         "FACEBOOK": {
+           "PLACEHOLDER": "Enter the Facebook username",
+@@ -440,6 +445,10 @@
+           "COUNTRY": {
+             "PLACEHOLDER": "Select country"
+           },
++          "PREFERRED_LANGUAGE": {
++            "PLACEHOLDER": "Select preferred language",
++            "SEARCH_PLACEHOLDER": "Search languages"
++          },
+           "BIO": {
+             "PLACEHOLDER": "Enter the bio"
+           },
+diff --git a/app/javascript/dashboard/routes/dashboard/conversation/contact/ContactForm.vue b/app/javascript/dashboard/routes/dashboard/conversation/contact/ContactForm.vue
+index 5814e01a8..1f3de637b 100644
+--- a/app/javascript/dashboard/routes/dashboard/conversation/contact/ContactForm.vue
++++ b/app/javascript/dashboard/routes/dashboard/conversation/contact/ContactForm.vue
+@@ -7,6 +7,7 @@ import {
+ import { required, email } from '@vuelidate/validators';
+ import { useVuelidate } from '@vuelidate/core';
+ import countries from 'shared/constants/countries.js';
++import { iso6391Languages } from 'dashboard/components/widgets/conversation/advancedFilterItems/languages';
+ import { isPhoneNumberValid } from 'shared/helpers/Validators';
+ import parsePhoneNumber from 'libphonenumber-js';
+ import NextButton from 'dashboard/components-next/button/Button.vue';
+@@ -45,6 +46,7 @@ export default {
+       email: '',
+       name: '',
+       phoneNumber: '',
++      preferredLanguage: '',
+       activeDialCode: '',
+       avatarFile: null,
+       avatarUrl: '',
+@@ -84,6 +86,12 @@ export default {
+     bio: {},
+   },
+   computed: {
++    preferredLanguageOptions() {
++      return iso6391Languages.map(({ name, id }) => ({
++        label: name,
++        value: id,
++      }));
++    },
+     parsePhoneNumber() {
+       return parsePhoneNumber(this.phoneNumber);
+     },
+@@ -161,6 +169,7 @@ export default {
+       const {
+         email: emailAddress,
+         phone_number: phoneNumber,
++        preferred_language: preferredLanguage,
+         name,
+       } = this.contact;
+       const additionalAttributes = this.contact.additional_attributes || {};
+@@ -168,6 +177,7 @@ export default {
+       this.name = name || '';
+       this.email = emailAddress || '';
+       this.phoneNumber = phoneNumber || '';
++      this.preferredLanguage = preferredLanguage || '';
+       this.companyName = additionalAttributes.company_name || '';
+       this.country = {
+         id: additionalAttributes.country_code || '',
+@@ -216,6 +226,7 @@ export default {
+         name: this.name,
+         email: this.email,
+         phone_number: this.setPhoneNumber,
++        preferred_language: this.preferredLanguage,
+         additional_attributes: {
+           ...this.contact.additional_attributes,
+           description: this.description,
+@@ -414,6 +425,20 @@ export default {
+       :label="$t('CONTACT_FORM.FORM.CITY.LABEL')"
+       :placeholder="$t('CONTACT_FORM.FORM.CITY.PLACEHOLDER')"
+     />
++    <div class="w-full mb-4">
++      <label>
++        {{ $t('CONTACT_FORM.FORM.PREFERRED_LANGUAGE.LABEL') }}
++      </label>
++      <ComboBox
++        v-model="preferredLanguage"
++        :options="preferredLanguageOptions"
++        class="[&>div>button]:!bg-n-alpha-black2"
++        :placeholder="$t('CONTACT_FORM.FORM.PREFERRED_LANGUAGE.PLACEHOLDER')"
++        :search-placeholder="
++          $t('CONTACT_FORM.FORM.PREFERRED_LANGUAGE.SEARCH_PLACEHOLDER')
++        "
++      />
++    </div>
+ 
+     <div class="w-full">
+       <label>{{ $t('CONTACTS_PAGE.LIST.TABLE_HEADER.SOCIAL_PROFILES') }}</label>
+diff --git a/app/models/contact.rb b/app/models/contact.rb
+index a63b164bb..eb59550b9 100644
+--- a/app/models/contact.rb
++++ b/app/models/contact.rb
+@@ -18,6 +18,7 @@
+ #  middle_name           :string           default("")
+ #  name                  :string           default("")
+ #  phone_number          :string
++#  preferred_language    :string
+ #  created_at            :datetime         not null
+ #  updated_at            :datetime         not null
+ #  account_id            :integer          not null
+@@ -47,6 +48,9 @@ class Contact < ApplicationRecord
+   include Labelable
+   include LlmFormattable
+ 
++  # The language the contact prefers to be contacted in, as an ISO 639-1 alpha-2 code.
++  PREFERRED_LANGUAGE_CODES = ISO_639::ISO_639_1.map(&:alpha2).freeze
++
+   validates :account_id, presence: true
+   validates :email, allow_blank: true, uniqueness: { scope: [:account_id], case_sensitive: false },
+                     format: { with: Devise.email_regexp, message: I18n.t('errors.contacts.email.invalid') }
+@@ -54,6 +58,9 @@ class Contact < ApplicationRecord
+   validates :phone_number,
+             allow_blank: true, uniqueness: { scope: [:account_id] },
+             format: { with: /\A\+[1-9]\d{1,14}\z/, message: I18n.t('errors.contacts.phone_number.invalid') }
++  validates :preferred_language,
++            allow_nil: true,
++            inclusion: { in: PREFERRED_LANGUAGE_CODES, message: I18n.t('errors.contacts.preferred_language.invalid') }
+ 
+   belongs_to :account
+   has_many :conversations, dependent: :destroy_async
+@@ -156,6 +163,7 @@ class Contact < ApplicationRecord
+       identifier: identifier,
+       name: name,
+       phone_number: phone_number,
++      preferred_language: preferred_language,
+       thumbnail: avatar_url,
+       blocked: blocked,
+       type: 'contact'
+@@ -175,6 +183,7 @@ class Contact < ApplicationRecord
+       identifier: identifier,
+       name: name,
+       phone_number: phone_number,
++      preferred_language: preferred_language,
+       thumbnail: avatar_url,
+       blocked: blocked
+     }
+@@ -217,6 +226,7 @@ class Contact < ApplicationRecord
+ 
+   def prepare_contact_attributes
+     prepare_email_attribute
++    prepare_preferred_language_attribute
+     prepare_jsonb_attributes
+   end
+ 
+@@ -225,6 +235,11 @@ class Contact < ApplicationRecord
+     self.email = email.present? ? email.downcase : nil
+   end
+ 
++  def prepare_preferred_language_attribute
++    # Keep a single representation for "not set" so consumers can rely on nil
++    self.preferred_language = preferred_language.presence
++  end
++
+   def prepare_jsonb_attributes
+     self.additional_attributes = {} if additional_attributes.blank?
+     self.custom_attributes = {} if custom_attributes.blank?
+diff --git a/app/views/api/v1/models/_contact.json.jbuilder b/app/views/api/v1/models/_contact.json.jbuilder
+index a76166a57..dc0ab20b8 100644
+--- a/app/views/api/v1/models/_contact.json.jbuilder
++++ b/app/views/api/v1/models/_contact.json.jbuilder
+@@ -4,6 +4,7 @@ json.email resource.email
+ json.id resource.id
+ json.name resource.name
+ json.phone_number resource.phone_number
++json.preferred_language resource.preferred_language
+ json.blocked resource.blocked
+ json.identifier resource.identifier
+ json.company_id resource.company_id if Current.account&.feature_enabled?('companies')
+diff --git a/config/locales/en.yml b/config/locales/en.yml
+index 3ce065515..631fb167b 100644
+--- a/config/locales/en.yml
++++ b/config/locales/en.yml
+@@ -128,6 +128,8 @@ en:
+         invalid: Invalid email
+       phone_number:
+         invalid: should be in e164 format
++      preferred_language:
++        invalid: should be a valid ISO 639-1 language code
+     companies:
+       domain:
+         invalid: must be a valid domain name
+diff --git a/db/migrate/20260901000000_add_preferred_language_to_contacts.rb b/db/migrate/20260901000000_add_preferred_language_to_contacts.rb
+new file mode 100644
+index 000000000..3e4a831bc
+--- /dev/null
++++ b/db/migrate/20260901000000_add_preferred_language_to_contacts.rb
+@@ -0,0 +1,5 @@
++class AddPreferredLanguageToContacts < ActiveRecord::Migration[7.1]
++  def change
++    add_column :contacts, :preferred_language, :string
++  end
++end
+diff --git a/db/schema.rb b/db/schema.rb
+index a6711fe01..65f4d6775 100644
+--- a/db/schema.rb
++++ b/db/schema.rb
+@@ -10,7 +10,7 @@
+ #
+ # It's strongly recommended that you check this file into your version control system.
+ 
+-ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
++ActiveRecord::Schema[7.1].define(version: 2026_09_01_000000) do
+   # These extensions should be enabled to support this database
+   enable_extension "pg_stat_statements"
+   enable_extension "pg_trgm"
+@@ -802,6 +802,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_31_000000) do
+     t.string "country_code", default: ""
+     t.boolean "blocked", default: false, null: false
+     t.bigint "company_id"
++    t.string "preferred_language"
+     t.index "lower((email)::text), account_id", name: "index_contacts_on_lower_email_account_id"
+     t.index ["account_id", "contact_type"], name: "index_contacts_on_account_id_and_contact_type"
+     t.index ["account_id", "email", "phone_number", "identifier"], name: "index_contacts_on_nonempty_fields", where: "(((email)::text <> ''::text) OR ((phone_number)::text <> ''::text) OR ((identifier)::text <> ''::text))"
+diff --git a/spec/controllers/api/v1/accounts/contacts_controller_spec.rb b/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
+index 9468b273c..69e9013da 100644
+--- a/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
++++ b/spec/controllers/api/v1/accounts/contacts_controller_spec.rb
+@@ -503,6 +503,27 @@ RSpec.describe 'Contacts API', type: :request do
+         expect(response).to conform_schema(200)
+         expect(response.body).to include(contact.name)
+       end
++
++      it 'returns the preferred language' do
++        contact.update!(preferred_language: 'es')
++
++        get "/api/v1/accounts/#{account.id}/contacts/#{contact.id}",
++            headers: admin.create_new_auth_token,
++            as: :json
++
++        expect(response).to have_http_status(:success)
++        expect(response.parsed_body['payload']['preferred_language']).to eq('es')
++      end
++
++      it 'returns a null preferred language when it is not set' do
++        get "/api/v1/accounts/#{account.id}/contacts/#{contact.id}",
++            headers: admin.create_new_auth_token,
++            as: :json
++
++        expect(response).to have_http_status(:success)
++        expect(response.parsed_body['payload']).to have_key('preferred_language')
++        expect(response.parsed_body['payload']['preferred_language']).to be_nil
++      end
+     end
+   end
+ 
+@@ -586,6 +607,25 @@ RSpec.describe 'Contacts API', type: :request do
+         expect(json_response['message']).to eq('Name is too long (maximum is 255 characters)')
+       end
+ 
++      it 'creates the contact with a preferred language' do
++        post "/api/v1/accounts/#{account.id}/contacts", headers: admin.create_new_auth_token,
++                                                        params: valid_params.merge({ preferred_language: 'es' })
++
++        expect(response).to have_http_status(:success)
++        expect(response.parsed_body['payload']['contact']['preferred_language']).to eq('es')
++        expect(Contact.last.preferred_language).to eq('es')
++      end
++
++      it 'does not create the contact with an invalid preferred language' do
++        expect do
++          post "/api/v1/accounts/#{account.id}/contacts", headers: admin.create_new_auth_token,
++                                                          params: valid_params.merge({ preferred_language: 'klingon' })
++        end.not_to change(Contact, :count)
++
++        expect(response).to have_http_status(:unprocessable_entity)
++        expect(response.parsed_body['message']).to eq('Preferred language should be a valid ISO 639-1 language code')
++      end
++
+       it 'creates the contact inbox when inbox id is passed' do
+         expect do
+           post "/api/v1/accounts/#{account.id}/contacts", headers: admin.create_new_auth_token,
+@@ -631,6 +671,40 @@ RSpec.describe 'Contacts API', type: :request do
+         expect(contact.additional_attributes).to eq({ 'attr1' => 'attr1', 'attr2' => 'new attr2', 'attr3' => 'attr3' })
+       end
+ 
++      it 'updates the preferred language' do
++        patch "/api/v1/accounts/#{account.id}/contacts/#{contact.id}",
++              headers: admin.create_new_auth_token,
++              params: { preferred_language: 'es' },
++              as: :json
++
++        expect(response).to have_http_status(:success)
++        expect(response).to conform_schema(200)
++        expect(response.parsed_body['payload']['preferred_language']).to eq('es')
++        expect(contact.reload.preferred_language).to eq('es')
++      end
++
++      it 'clears the preferred language when a blank value is passed' do
++        contact.update!(preferred_language: 'es')
++
++        patch "/api/v1/accounts/#{account.id}/contacts/#{contact.id}",
++              headers: admin.create_new_auth_token,
++              params: { preferred_language: '' },
++              as: :json
++
++        expect(response).to have_http_status(:success)
++        expect(contact.reload.preferred_language).to be_nil
++      end
++
++      it 'prevents updating with an invalid preferred language' do
++        patch "/api/v1/accounts/#{account.id}/contacts/#{contact.id}",
++              headers: admin.create_new_auth_token,
++              params: { preferred_language: 'klingon' },
++              as: :json
++
++        expect(response).to have_http_status(:unprocessable_entity)
++        expect(contact.reload.preferred_language).to be_nil
++      end
++
+       it 'prevents the update of contact of another account' do
+         other_account = create(:account)
+         other_contact = create(:contact, account: other_account)
+diff --git a/spec/models/contact_spec.rb b/spec/models/contact_spec.rb
+index fcd362be8..8c282c5fd 100644
+--- a/spec/models/contact_spec.rb
++++ b/spec/models/contact_spec.rb
+@@ -90,6 +90,58 @@ RSpec.describe Contact do
+     end
+   end
+ 
++  context 'when preferred language' do
++    it 'is nil by default' do
++      expect(create(:contact).preferred_language).to be_nil
++    end
++
++    it 'persists a valid ISO 639-1 code' do
++      contact = create(:contact)
++      expect(contact.update!(preferred_language: 'es')).to be true
++      expect(contact.reload.preferred_language).to eq 'es'
++    end
++
++    it 'throws error for a code outside ISO 639-1' do
++      contact = create(:contact)
++      expect { contact.update!(preferred_language: 'klingon') }.to raise_error(ActiveRecord::RecordInvalid)
++    end
++
++    it 'throws error for a regional locale variant' do
++      contact = create(:contact)
++      expect { contact.update!(preferred_language: 'pt_BR') }.to raise_error(ActiveRecord::RecordInvalid)
++    end
++
++    it 'throws error for an uppercased code' do
++      contact = create(:contact)
++      expect { contact.update!(preferred_language: 'ES') }.to raise_error(ActiveRecord::RecordInvalid)
++    end
++
++    it 'sets preferred language to nil when empty string' do
++      contact = create(:contact, preferred_language: '')
++      expect(contact.preferred_language).to be_nil
++    end
++
++    it 'clears an existing preferred language when empty string is passed' do
++      contact = create(:contact, preferred_language: 'de')
++      expect(contact.update!(preferred_language: '')).to be true
++      expect(contact.reload.preferred_language).to be_nil
++    end
++  end
++
++  describe '#push_event_data' do
++    it 'includes the preferred language' do
++      contact = create(:contact, preferred_language: 'fr')
++      expect(contact.push_event_data).to include(preferred_language: 'fr')
++    end
++  end
++
++  describe '#webhook_data' do
++    it 'includes the preferred language' do
++      contact = create(:contact, preferred_language: 'fr')
++      expect(contact.webhook_data).to include(preferred_language: 'fr')
++    end
++  end
++
+   context 'when city and country code passed in additional attributes' do
+     it 'updates location and country code' do
+       contact = create(:contact, additional_attributes: { city: 'New York', country: 'US' })
+diff --git a/swagger/definitions/request/contact/create_payload.yml b/swagger/definitions/request/contact/create_payload.yml
+index 7f74e501c..5350fbade 100644
+--- a/swagger/definitions/request/contact/create_payload.yml
++++ b/swagger/definitions/request/contact/create_payload.yml
+@@ -34,6 +34,10 @@ properties:
+     type: string
+     description: A unique identifier for the contact in external system
+     example: '1234567890'
++  preferred_language:
++    type: string
++    description: ISO 639-1 code of the language the contact prefers to be contacted in
++    example: es
+   additional_attributes:
+     type: object
+     description: An object where you can store additional attributes for contact. example {"type":"customer", "age":30}
+diff --git a/swagger/definitions/request/contact/update_payload.yml b/swagger/definitions/request/contact/update_payload.yml
+index 99bec3548..5b8dec659 100644
+--- a/swagger/definitions/request/contact/update_payload.yml
++++ b/swagger/definitions/request/contact/update_payload.yml
+@@ -28,6 +28,10 @@ properties:
+     type: string
+     description: A unique identifier for the contact in external system
+     example: '1234567890'
++  preferred_language:
++    type: string
++    description: ISO 639-1 code of the language the contact prefers to be contacted in
++    example: es
+   additional_attributes:
+     type: object
+     description: An object where you can store additional attributes for contact. example {"type":"customer", "age":30}
+diff --git a/swagger/definitions/resource/contact.yml b/swagger/definitions/resource/contact.yml
+index 259604f0d..c8edd3057 100644
+--- a/swagger/definitions/resource/contact.yml
++++ b/swagger/definitions/resource/contact.yml
+@@ -23,6 +23,10 @@ properties:
+         phone_number:
+           type: string
+           description: The phone number of the contact
++        preferred_language:
++          type: string
++          description: The ISO 639-1 code of the language the contact prefers to be contacted in
++          example: es
+         blocked:
+           type: boolean
+           description: Whether the contact is blocked
+diff --git a/swagger/definitions/resource/contact_detail.yml b/swagger/definitions/resource/contact_detail.yml
+index 705868192..d2ed82740 100644
+--- a/swagger/definitions/resource/contact_detail.yml
++++ b/swagger/definitions/resource/contact_detail.yml
+@@ -40,6 +40,11 @@ properties:
+       - string
+       - 'null'
+     description: The phone number of the contact
++  preferred_language:
++    type:
++      - string
++      - 'null'
++    description: The ISO 639-1 code of the language the contact prefers to be contacted in
+   thumbnail:
+     type: string
+     description: The thumbnail of the contact
+diff --git a/swagger/definitions/resource/contact_list_item.yml b/swagger/definitions/resource/contact_list_item.yml
+index 1be9c6630..f91c01d77 100644
+--- a/swagger/definitions/resource/contact_list_item.yml
++++ b/swagger/definitions/resource/contact_list_item.yml
+@@ -38,6 +38,11 @@ properties:
+       - string
+       - 'null'
+     description: The phone number of the contact
++  preferred_language:
++    type:
++      - string
++      - 'null'
++    description: The ISO 639-1 code of the language the contact prefers to be contacted in
+   blocked:
+     type: boolean
+     description: Whether the contact is blocked
+diff --git a/swagger/swagger.json b/swagger/swagger.json
+index e1bc96870..85b156f34 100644
+--- a/swagger/swagger.json
++++ b/swagger/swagger.json
+@@ -10495,6 +10495,11 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The ISO 639-1 code of the language the contact prefers to be contacted in",
++                  "example": "es"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -12907,6 +12912,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -12960,6 +12970,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -15802,6 +15817,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "thumbnail": {
+             "type": "string",
+             "description": "The thumbnail of the contact"
+@@ -16186,6 +16208,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"
+diff --git a/swagger/tag_groups/application_swagger.json b/swagger/tag_groups/application_swagger.json
+index 0aa95fae4..2b9e0d302 100644
+--- a/swagger/tag_groups/application_swagger.json
++++ b/swagger/tag_groups/application_swagger.json
+@@ -9002,6 +9002,11 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The ISO 639-1 code of the language the contact prefers to be contacted in",
++                  "example": "es"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -10388,8 +10393,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -10448,7 +10456,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -11404,6 +11419,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -11457,6 +11477,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -14299,6 +14324,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "thumbnail": {
+             "type": "string",
+             "description": "The thumbnail of the contact"
+@@ -14683,6 +14715,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"
+diff --git a/swagger/tag_groups/client_swagger.json b/swagger/tag_groups/client_swagger.json
+index 4a8835be1..92059aac3 100644
+--- a/swagger/tag_groups/client_swagger.json
++++ b/swagger/tag_groups/client_swagger.json
+@@ -1169,6 +1169,11 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The ISO 639-1 code of the language the contact prefers to be contacted in",
++                  "example": "es"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -2555,8 +2560,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2615,7 +2623,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -3571,6 +3586,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -3624,6 +3644,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -6466,6 +6491,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "thumbnail": {
+             "type": "string",
+             "description": "The thumbnail of the contact"
+@@ -6850,6 +6882,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"
+diff --git a/swagger/tag_groups/other_swagger.json b/swagger/tag_groups/other_swagger.json
+index cbe853de0..5a7300e87 100644
+--- a/swagger/tag_groups/other_swagger.json
++++ b/swagger/tag_groups/other_swagger.json
+@@ -584,6 +584,11 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The ISO 639-1 code of the language the contact prefers to be contacted in",
++                  "example": "es"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -1970,8 +1975,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2030,7 +2038,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -2986,6 +3001,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -3039,6 +3059,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -5881,6 +5906,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "thumbnail": {
+             "type": "string",
+             "description": "The thumbnail of the contact"
+@@ -6265,6 +6297,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"
+diff --git a/swagger/tag_groups/platform_swagger.json b/swagger/tag_groups/platform_swagger.json
+index 56b23b9c7..0889ba9e9 100644
+--- a/swagger/tag_groups/platform_swagger.json
++++ b/swagger/tag_groups/platform_swagger.json
+@@ -1345,6 +1345,11 @@
+                   "type": "string",
+                   "description": "The phone number of the contact"
+                 },
++                "preferred_language": {
++                  "type": "string",
++                  "description": "The ISO 639-1 code of the language the contact prefers to be contacted in",
++                  "example": "es"
++                },
+                 "blocked": {
+                   "type": "boolean",
+                   "description": "Whether the contact is blocked"
+@@ -2731,8 +2736,11 @@
+             "description": "The type of the audited object (e.g., Conversation, Contact, User)"
+           },
+           "auditable": {
+-            "type": "object",
+-            "description": "The audited object data"
++            "type": [
++              "object",
++              "null"
++            ],
++            "description": "The audited object data. Null for message deletion entries, which are served without the message payload."
+           },
+           "associated_id": {
+             "type": "integer",
+@@ -2791,7 +2799,14 @@
+               "string",
+               "null"
+             ],
+-            "description": "IP address from which the action was performed"
++            "description": "IP address from which the action was performed. Masked to the network portion (for example 203.0.113.x) unless the account has the audit_log_ip_address feature enabled, in which case the full address is returned."
++          },
++          "location": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "City and country resolved from remote_address, present only when the account has the ip_lookup feature enabled and the address has been resolved. Omitted when the account returns full IP addresses."
+           }
+         }
+       },
+@@ -3747,6 +3762,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -3800,6 +3820,11 @@
+             "description": "A unique identifier for the contact in external system",
+             "example": "1234567890"
+           },
++          "preferred_language": {
++            "type": "string",
++            "description": "ISO 639-1 code of the language the contact prefers to be contacted in",
++            "example": "es"
++          },
+           "additional_attributes": {
+             "type": "object",
+             "description": "An object where you can store additional attributes for contact. example {\"type\":\"customer\", \"age\":30}",
+@@ -6642,6 +6667,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "thumbnail": {
+             "type": "string",
+             "description": "The thumbnail of the contact"
+@@ -7026,6 +7058,13 @@
+             ],
+             "description": "The phone number of the contact"
+           },
++          "preferred_language": {
++            "type": [
++              "string",
++              "null"
++            ],
++            "description": "The ISO 639-1 code of the language the contact prefers to be contacted in"
++          },
+           "blocked": {
+             "type": "boolean",
+             "description": "Whether the contact is blocked"

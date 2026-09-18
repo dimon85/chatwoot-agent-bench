@@ -1,0 +1,13 @@
+{
+  "field": "preferred_language",
+  "checks": {
+    "column_exists": true,
+    "settable_on_create": true,
+    "persisted": true,
+    "updatable": true,
+    "returned_in_response": true,
+    "returned_value_correct": true
+  },
+  "ok": true,
+  "error": null
+}

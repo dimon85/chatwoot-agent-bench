@@ -1,0 +1,103 @@
+{
+  "run_id": "b2",
+  "agent": "opencode",
+  "base_sha": "bacb65d4f683ef40abb21796efe54c38d01a6d90",
+  "recorded_at": "2026-09-17T14:20:44.621224+00:00",
+  "suites": {
+    "rspec": {
+      "exit_code": 1,
+      "duration_s": 864,
+      "parsed": true,
+      "examples": 9454,
+      "failures": 2,
+      "pending": 65,
+      "rspec_reported_duration_s": 858.1,
+      "failure_set": [
+        "./spec/builders/agent_builder_spec.rb:47",
+        "./spec/enterprise/services/voice/call_transcription_service_spec.rb:77"
+      ],
+      "unexpected_failures": [],
+      "baseline_failures_missing": [],
+      "matches_baseline": true
+    },
+    "vitest": {
+      "exit_code": 0,
+      "duration_s": 106,
+      "parsed": true,
+      "failed": 0,
+      "passed": 4584
+    },
+    "eslint": {
+      "exit_code": 0,
+      "duration_s": 24
+    },
+    "rubocop": {
+      "exit_code": 0,
+      "duration_s": 74,
+      "parsed": true,
+      "offenses": 0,
+      "files_inspected": 3036
+    }
+  },
+  "run_window_utc": {
+    "started_utc": "2026-09-17T13:56:36Z",
+    "finished_utc": "2026-09-17T14:02:48Z"
+  },
+  "acceptance": {
+    "field": "preferred_language",
+    "checks": {
+      "column_exists": true,
+      "settable_on_create": true,
+      "persisted": true,
+      "updatable": true,
+      "returned_in_response": true,
+      "returned_value_correct": true
+    },
+    "ok": true,
+    "error": null,
+    "ran": true
+  },
+  "agent_effort": {
+    "parsed": true,
+    "steps": 100,
+    "tool_calls": 153,
+    "wall_s": 372,
+    "is_error": false,
+    "tokens": {
+      "input": 116684,
+      "output": 16185,
+      "cache_read": 9379584,
+      "cache_write": 0,
+      "reasoning": 21855
+    },
+    "per_model": {},
+    "harness_reported_cost_usd": 0.068465,
+    "list_price_equivalent_usd": null,
+    "note": "harness_reported_cost_usd is opencode's own figure, kept as a cross-check. Derive cost in the analysis from the rate card and run_window_utc \u2014 DeepSeek prices by time of day."
+  },
+  "diff": {
+    "files_changed": 18,
+    "insertions": 190,
+    "deletions": 2,
+    "files": [
+      ".../api/v1/accounts/contacts_controller.rb",
+      ".../Contacts/ContactsCard/ContactsCard.vue",
+      ".../Contacts/ContactsForm/ContactsForm.vue",
+      ".../ContactsForm/specs/ContactsForm.spec.js",
+      ".../Contacts/Pages/ContactsList.vue",
+      ".../dashboard/i18n/locale/en/contact.json",
+      "app/models/contact.rb",
+      "app/views/api/v1/models/_contact.json.jbuilder",
+      "...917000000_add_preferred_language_to_contacts.rb",
+      "db/schema.rb",
+      ".../api/v1/accounts/contacts_controller_spec.rb",
+      "spec/models/contact_spec.rb",
+      ".../definitions/request/contact/create_payload.yml",
+      ".../definitions/request/contact/update_payload.yml",
+      "swagger/definitions/resource/contact.yml",
+      "swagger/definitions/resource/contact_detail.yml",
+      "swagger/definitions/resource/contact_list_item.yml",
+      "swagger/swagger.json"
+    ]
+  }
+}

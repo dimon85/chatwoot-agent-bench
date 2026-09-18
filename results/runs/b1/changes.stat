@@ -1,0 +1,22 @@
+ .../api/v1/accounts/contacts_controller.rb         |  3 +-
+ .../Contacts/ContactsForm/ContactsForm.vue         | 26 ++++++++
+ .../dashboard/i18n/locale/en/contact.json          |  3 +
+ .../store/modules/specs/contacts/actions.spec.js   | 27 ++++++++
+ app/models/contact.rb                              |  5 ++
+ app/views/api/v1/models/_contact.json.jbuilder     |  1 +
+ ...917130215_add_preferred_language_to_contacts.rb |  5 ++
+ db/schema.rb                                       |  3 +-
+ .../api/v1/accounts/contacts_controller_spec.rb    | 33 ++++++++++
+ spec/models/contact_spec.rb                        | 15 +++++
+ .../definitions/request/contact/create_payload.yml |  4 ++
+ .../definitions/request/contact/update_payload.yml |  4 ++
+ swagger/definitions/resource/contact.yml           |  3 +
+ swagger/definitions/resource/contact_detail.yml    |  5 ++
+ swagger/definitions/resource/contact_list_item.yml |  5 ++
+ .../resource/extension/contact/conversation.yml    |  5 ++
+ swagger/swagger.json                               | 56 +++++++++++++++++
+ swagger/tag_groups/application_swagger.json        | 72 +++++++++++++++++++++-
+ swagger/tag_groups/client_swagger.json             | 72 +++++++++++++++++++++-
+ swagger/tag_groups/other_swagger.json              | 72 +++++++++++++++++++++-
+ swagger/tag_groups/platform_swagger.json           | 72 +++++++++++++++++++++-
+ 21 files changed, 477 insertions(+), 14 deletions(-)
