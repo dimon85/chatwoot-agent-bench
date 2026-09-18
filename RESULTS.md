@@ -70,36 +70,50 @@ explicitly tells contributors to prefer the smallest production-ready change and
 avoid speculative guards. Arm A exceeded the brief. Whether that is care or scope creep
 is a judgement, and it is stated here as one.
 
-## What counting missed
+## What the frontend actually looked like
 
-Part A records that five of the six runs touched the same number of frontend files.
-That number is worthless on its own, and a human at the running application found out
-why within a minute.
+**A correction, kept visible rather than edited away.** An earlier version of this
+document said that five runs added a plain text input and one added a dropdown. That
+was wrong. It came from reading one diff closely and assuming the other five matched,
+which is the same mistake this whole benchmark exists to argue against.
 
-Five runs added a **plain text input**. You can type anything into it.
+All six runs added a searchable `ComboBox`, the same component the country field in that
+form already uses. None of them shipped a free-text field.
 
-One run — a1 — added a **searchable dropdown of ISO 639-1 languages**, built from
-`iso6391Languages`, a list this project already ships and already uses in conversation
-filters. It used `ComboBox`, the same component the country field in that very form
-uses. It pulled the country field's inline class expression out into a shared
-`comboBoxClass` rather than duplicating it. It added a separate i18n string for the
-dropdown's own search box.
+What differs is where they got the list:
 
-Combined with its backend validation against the same code set, an invalid language
-cannot be entered through the interface at all — not rejected after the fact,
-unreachable.
+| source | runs |
+|---|---|
+| `iso6391Languages`, the full ISO 639-1 set | a1 |
+| default import of the same languages module | a2, b2 |
+| `useConfig().enabledLanguages` — the languages this installation has enabled | a3, b1, b3 |
 
-Every automated step in this harness reported these runs as equivalent. rspec passed
-for all of them. eslint passed. The acceptance check passed. The file counts matched.
-The diff sizes were in the same range.
+Three of the six reached for a composable already in scope and offered only the
+languages the installation actually runs. That is arguably the more context-aware
+choice, and it is split across both arms — two from B, one from A.
 
-The difference was visible in about sixty seconds of clicking.
+So the frontend, like the backend, does not separate the models.
 
-That is a limitation of the counting, and it is worth stating plainly rather than
-hiding: **Part A counts which files changed, not what was done inside them.** Part B
-exists because of that, and F3d — the requirement that the field be editable from the
-dashboard — is deliberately the one check assigned to a human rather than a script.
-This is what it caught.
+What does separate them is narrower than it first looked: a1 additionally wired the
+legacy contact form and added the `LABEL` string, and a1's backend validation is tied
+to the full ISO set while the dropdown offers it — consistent. The runs without
+validation cannot be reached with an invalid value through the interface either, since
+the dropdown constrains input; their exposure is through the API, where a1 returns 422
+and they return 200.
+
+> Demonstrated live: a1 rejects `"zzzzz"` with 422 and the ISO 639-1 error string.
+> b3 accepts it and stores `'zzzzz'` — while its own spec file contains
+> `it 'rejects an unsupported language code'`, failing.
+
+## Limits of the counting
+
+Part A counts which files changed, not what was built inside them. Five of six runs
+produced identical A7/A7b rows while sourcing their language list from three different
+places.
+
+No automated step distinguished them. Nor, on first reading, did I — I inferred from
+one diff. The check that actually settles this kind of question is a human in the
+running application, which is why F3d is assigned to a person and not a script.
 
 ## Cost per completed task
 

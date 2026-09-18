@@ -108,12 +108,14 @@ Three runs per arm, not five. See § Amendments, 2026-09-17.
 ## Known limitation of Part A
 
 A7 and A7b count which frontend files a run touched. They do not and cannot capture
-what was built inside them. In the measured series, five runs adding a free-text input
-and one run adding a searchable dropdown backed by the project's own language list
-produced identical Part A rows.
+what was built inside them. In the measured series all six runs added the same
+component and produced near-identical Part A rows, while sourcing the language list
+from three different places — the full ISO 639-1 set, a default import of the same
+module, and the installation's own enabled languages via `useConfig()`.
 
-No automated step in this harness distinguished them. F3d, the human check against the
-running application, did — in about a minute. That is why it stays a human check.
+No automated step distinguished them, and neither did a first reading of one diff. Only
+opening the running application and comparing behaviour settled it. That is why F3d
+stays a human check.
 
 ## Interpretation gate (decided in advance)
 
