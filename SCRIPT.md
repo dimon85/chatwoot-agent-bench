@@ -360,19 +360,26 @@ Fine, I thought. Off by a known factor. Then I checked the other provider.
 
 > SCREEN: two numbers side by side, tokens.
 
-My tooling said two and a half million tokens in. The billing console said six point
-three million. Not the price — the *tokens*. Two and a half times more consumed than
-my tool recorded.
+On one run my tooling said two and a half million input tokens. The usage page said six
+point four million. Not the price — the *tokens*.
 
-I still do not know why. My best guess is retried requests, which the provider bills
-and the tool does not log. That is a guess, and I am telling you it is a guess.
+And I can be sure that is the same run, not an accounting window artefact: this provider
+reports hourly, every one of my runs started and finished inside a single hour, and no
+other run shared it.
+
+Across four runs the gap ranges from about one point two to about two and a half times.
+It is not a constant factor, which rules out the simplest explanations — a units error, a
+missing category.
+
+I still do not know what it is. My best guess is retried requests, billed by the provider
+and not logged by the tool. That is a guess, and I am telling you it is a guess.
 
 > SCREEN: the Haiku row in the usage table.
 
 And while I was in there, one more thing. That run was pinned to one specific model.
-The billing shows a second, smaller model on the same run — a couple of thousand
-tokens, probably generating a session title. Small. But it means the thing I pinned was
-not the only thing running.
+The billing shows a second, smaller model on the same runs — three and a half thousand
+input tokens across the day, probably generating session titles. Small. But it means the
+thing I pinned was not the only thing running.
 
 > SCREEN: back to camera.
 
@@ -549,8 +556,12 @@ the same repository, read again and again.
 > SCREEN: the two cache rates side by side.
 
 And cached input is where the two providers differ most. Fifty cents per million on the
-expensive one, three tenths of a cent on the cheap one. A hundred and sixty-seven to one,
-against a headline ratio of thirty-three.
+expensive one. Three tenths of a cent on the cheap one.
+
+Put those side by side and you are looking at more than two orders of magnitude, against
+a headline ratio of thirty-three. I am not going to give you a precise figure for that
+one, because the cheap provider publishes its cache rate to three decimal places and the
+ratio moves depending on how the fourth would round.
 
 Every run in this series was off-peak, so that is a single number and not a range — on
 the cheap provider the peak rate is double, and a series straddling that boundary would
@@ -558,9 +569,9 @@ not have one ratio at all.
 
 > SCREEN: the write line highlighted, small.
 
-One detail worth its own second. Writing to the cache costs more than fresh text — a
-premium for the privilege of reading it cheaply later. Under three percent of my input
-volume was writes. It was twenty-six percent of my input bill.
+One detail worth its own second. Writing to the cache costs twenty-five percent more than
+fresh text — the premium for reading it back cheaply later. Under three percent of my
+input volume was writes. It was twenty-six percent of my input bill.
 
 A sliver on the graph you cannot see, and a quarter of the money.
 
