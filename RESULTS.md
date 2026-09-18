@@ -134,6 +134,33 @@ volume.
 A prediction made after the pilots — that the expensive model would be more efficient
 per task and so narrow the gap — was wrong. It was based on a single pilot run.
 
+## The absolute cost figures belong to the harness, not the model
+
+The 165× ratio is measured under one harness and both arms sat under it equally, so the
+comparison holds. **$11.01 does not.** It is what Opus 5 costs *through opencode* on
+this task, and that is not the same thing as what Opus 5 costs.
+
+Same model, same repository, measured here:
+
+| harness | steps | wall | context read |
+|---|---|---|---|
+| Claude Code | 32–35 | 155–178s | 1.4–1.8M |
+| opencode | 48–117 | 702–1513s | 2.5–12.9M |
+
+Four to eight times the wall clock, two to seven times the context, for the same model
+doing the same feature in the same codebase.
+
+The comparison is not clean: the Claude Code runs were on the earlier backend-only
+prompt, the opencode runs on the full one including the UI. But the UI portion is about
+ten lines across four files. It does not account for a sevenfold difference in context.
+
+So: the ratio between the two models is a finding. The absolute dollar figure is a
+property of the harness as much as of the model, and quoting it without that
+qualification would be exactly the kind of number this project set out to criticise.
+
+Fixing the harness and varying it instead — same model, different tooling — is a
+separate experiment. The infrastructure for it already exists.
+
 ## What this does not support
 
 - One task. `preferred_language` on one model in one Rails codebase. Nothing here

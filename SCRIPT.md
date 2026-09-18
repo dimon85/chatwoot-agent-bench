@@ -519,9 +519,30 @@ After my pilot runs I predicted the opposite — that the expensive model would 
 efficient per task and the gap would narrow. That prediction came from a single run. It
 was wrong. I am leaving it in the repository with the timestamp on it.
 
+> SCREEN: the two harness rows.
+
+One more caveat, and it is the one I would lead with if I were arguing against this
+video.
+
+Eleven dollars is what the expensive model costs *through the tool I used*. Not what it
+costs.
+
+I have the same model, on the same repository, measured through a different tool
+earlier in this project. Thirty-odd steps instead of up to a hundred and seventeen.
+Under three minutes instead of up to twenty-five. A fraction of the context.
+
+The comparison is not clean — those earlier runs were on a slightly smaller version of
+the task — but the task grew by about ten lines, and the context grew sevenfold. That
+is not the task.
+
+So the ratio between the two models holds: they ran under the same tool, and the
+difference between them is real. The absolute number does not travel. Quote eleven
+dollars anywhere without saying which tool produced it and you have made exactly the
+kind of claim this video spent twenty minutes arguing against.
+
 > SCREEN: the limits, plainly listed.
 
-What this does not prove.
+What else this does not prove.
 
 One task, in one codebase. Three runs per model, not five — I ran out of budget, and
 that is in the commit history with the reason. I could not pin reasoning effort,
