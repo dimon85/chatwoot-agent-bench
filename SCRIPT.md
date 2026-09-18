@@ -20,7 +20,7 @@ trust, and trust is built by claiming less than you can prove.
 ---
 
 ## Block 1 — Cold open
-**0:00 – 0:45 · ~120 words**
+**0:00 – 1:25 · ~212 words**
 
 > SCREEN: two numbers, nothing else.
 
@@ -63,7 +63,7 @@ Here is what I found.
 ---
 
 ## Block 2 — Why one run tells you nothing
-**0:45 – 2:45 · ~290 words**
+**1:25 – 4:06 · ~403 words**
 
 > SCREEN: a typical "I tested two models" post.
 
@@ -126,7 +126,7 @@ publish a confident, well-evidenced, completely false claim.
 - Do not show a six-row table. That is block 6's graphic; showing it now spends it.
 
 ## Block 3 — The setup
-**2:45 – 6:00 · ~480 words · data-independent**
+**4:06 – 7:52 · ~565 words · data-independent**
 
 > SCREEN: the Chatwoot repo, file tree scrolling.
 
@@ -208,7 +208,7 @@ Everything else is fixed.
 - Do not explain the two baseline failures in detail. Name them, move on; the detail
   lives in the repo.
 ## Block 4 — How the measurement nearly lied
-**6:00 – 11:30 · ~760 words · data-independent**
+**7:52 – 12:59 · ~768 words · data-independent**
 
 > SCREEN: terminal, the harness finishing a run, everything green.
 
@@ -314,7 +314,7 @@ Nobody requires you to run a second model. That is the part that bothers me.
   about.
 - Final line lands better dry than indignant.
 ## Block 5 — Why the cost numbers you read are fake
-**11:30 – 15:00 · ~470 words · data-independent**
+**12:59 – 16:45 · ~565 words · data-independent**
 
 > SCREEN: a typical price-comparison table from a blog post.
 
@@ -396,7 +396,7 @@ That turns out to be where it gets interesting.
 - The last two lines are the handoff to the result. Do not answer the question here,
   even if the answer is known by the time you record.
 ## Block 6 — What six runs actually showed
-**15:00 – 20:00 · ~620 words**
+**16:45 – 21:31 · ~715 words**
 
 > SCREEN: the Part A table, all six columns.
 
@@ -416,22 +416,18 @@ value survives. Six out of six.
 
 If I had stopped there, I would have a boring video and a wrong one.
 
-> SCREEN: the swagger file list.
+> SCREEN: the documentation split, one line, then move on.
 
-Here is the first thing that is actually wrong. This API's documentation is generated.
-You edit source files, then run a build task that produces the files that are actually
-served.
+You have already seen one of these: three of the six runs edited the API documentation
+sources and never rebuilt them, so the served docs do not have the change. One of them
+edited four files and regenerated nothing.
 
-Three of the six runs edited the sources and did not finish the build. One of them
-edited four documentation files and regenerated nothing at all.
-
-So the change is in the source. The documentation that your users read does not have
-it. Every test passes. Every linter passes. The diff looks complete.
+Here is what I did not show you earlier.
 
 > SCREEN: the rubocop.yml diff.
 
-Second. Adding this field pushes the Contact class to a hundred and seventy-seven
-lines. The linter's limit is a hundred and seventy-five.
+Adding this field pushes the Contact class to a hundred and seventy-seven lines. The
+linter's limit is a hundred and seventy-five.
 
 Three runs — all three of one model — opened the linter configuration and added their
 own file to the exemption list.
@@ -504,7 +500,7 @@ than scoring it as a point.
 ---
 
 ## Block 7 — What it costs, and what this does not prove
-**20:00 – 25:00 · ~330 words**
+**21:31 – 25:42 · ~627 words**
 
 > SCREEN: two numbers, billing pages behind them.
 
@@ -517,44 +513,58 @@ A hundred and sixty-five times.
 > SCREEN: the per-token price table.
 
 The headline prices say thirty-three to one on input. The billing says a hundred and
-sixty-five. So the table on every comparison page does not describe what I paid.
+sixty-five. The table on every comparison page does not describe what I paid.
 
-> SCREEN: the two effective rates.
+> SCREEN: both rate cards, the cached-input lines highlighted.
 
-Here is what I actually paid, and this comes from the providers' own usage pages, not
-from my tooling.
+Almost nothing in an agent run is new text. It is the same repository, read again and
+again. Both providers discount that, and they call it cached input.
 
-Divide the bill by the tokens. On the expensive model I paid an effective **seventy-one
-cents** per million input tokens. Its list price is five dollars.
+Fifty cents per million on the expensive one. Three tenths of a cent on the cheap one.
+A hundred and sixty-seven to one, from the two published rate cards, against a headline
+ratio of thirty-three.
 
-I was not paying list. Almost nothing in an agent run is new text — it is the same
-repository, read again and again. Both providers discount that. They call it cached
-input, and they discount it very differently: fifty cents per million on one side,
-three tenths of a cent on the other — a hundred and sixty-seven to one, from the two
-published rate cards, against a headline ratio of thirty-three.
-
-> SCREEN: the two rate cards, cache lines highlighted.
-
-That line is what decided this comparison. It is a footnote on both pricing pages, it
-has no column in any comparison table I have seen, and how much of it you incur depends
-on your tooling rather than on the model.
+Every run in this series was off-peak, so that is a single number and not a range —
+which matters, because on the cheap provider the peak rate is double, and a series that
+straddled the boundary would not have one ratio at all.
 
 > SCREEN: back to camera.
 
-What I cannot give you is the precise split.
+What I cannot give you is the split inside that input.
 
-To say "this much was cache and this much was fresh" I would need token counts broken
-down by type. Neither provider's usage page gives me that — they give totals in and
-totals out. The only thing that breaks it down is my own tooling, and I spent three
-minutes earlier telling you it under-reports the expensive provider by roughly a factor
-of two.
+How much was fresh text, how much was written to cache, how much was read back — that
+needs token counts by type, and neither provider's usage page breaks them down. It gives
+totals in and totals out. The only thing that breaks it down further is my own tooling,
+which I spent three minutes earlier telling you under-reports this provider by roughly a
+factor of two.
 
-So: the ratio is measured and I trust it. The mechanism is cached input, and the
-effective rates show it plainly. The exact decomposition needs a number nobody in this
+So: the ratio is measured and I trust it. The mechanism is cached input, and the two
+rate cards show why. The exact composition of the input needs a number nobody in this
 chain reports accurately.
 
 Saying it fits and calling that proof would have been the easiest paragraph in this
 script to write.
+
+> SCREEN: the two harness rows.
+
+One more caveat, and it is the one I would lead with if I were arguing against this
+video.
+
+Eleven dollars is what the expensive model costs *through the tool I used*. Not what it
+costs.
+
+I have the same model, on the same repository, measured through a different tool earlier
+in this project. Thirty-odd steps instead of up to a hundred and seventeen. Under three
+minutes instead of up to twenty-five. A fraction of the context re-read.
+
+That comparison is not clean — the earlier runs were on a slightly smaller version of
+the task — but the task grew by about ten lines and the context grew several times over.
+That is not the task.
+
+The ratio between the two models holds: both arms ran under the same tool. The absolute
+number does not travel. Quote eleven dollars anywhere without saying which tool produced
+it and you have made exactly the kind of claim this video spent twenty minutes arguing
+against.
 
 > SCREEN: the limits, plainly listed.
 
@@ -570,9 +580,10 @@ called that I never asked for.
 The useful thing I can tell you is not which model to buy.
 
 It is that on a well-specified task in a mature codebase, both models produced
-essentially the same code — and both left the same kind of hole: generated artifacts
-not regenerated, a check switched off instead of satisfied, a test asserting something
-that was never built.
+essentially the same code — and left holes of the same kind. Generated artifacts not
+rebuilt, by runs of both models. A linter switched off instead of satisfied, by three
+runs of one. A test asserting behaviour that was never written, by a single run of the
+other.
 
 None of that is caught by running the test suite. All of it is caught by a human
 reading the diff.
