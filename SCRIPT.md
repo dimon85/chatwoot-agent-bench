@@ -444,6 +444,25 @@ did not implement that validation, and shipped with its own tests failing.
 It did not break the codebase. It broke its own promise — which is worse in one narrow
 way. The next person reads the spec, sees the behaviour described, and believes it.
 
+> SCREEN: the ComboBox, then the three import lines side by side.
+
+One more thing, and it is about me rather than the models.
+
+When I first read these diffs, I saw that one run had built the language field as a
+searchable dropdown, wired to a list this project already ships. I checked the other
+five for the same import, did not find it, and concluded they had shipped a plain text
+box. I wrote that down as a finding.
+
+It was wrong. All six built the same dropdown. They just sourced the list from three
+different places — and three of them used the installation's own enabled languages,
+which is arguably the better choice.
+
+I found this out because someone opened the running application and looked.
+
+That is the third time in this project that a conclusion from a single sample turned
+out to be false. The first two were mine about the models. This one was mine about my
+own data, in a benchmark built specifically to stop that from happening.
+
 > SCREEN: the two split tables.
 
 Now, the difference between the models. There is one, and it is clean: three out of
